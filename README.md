@@ -15,19 +15,37 @@ Youtube links
 1) Clone Repo
 
 2) Make environment
-If you are familiar with conda:
+    - If you are familiar with conda:
 
+``` shell
 conda env create -f environment.yml
-conda activate myenv
+conda activate myenv_scouting
+```
 
-If you are familir with pip: 
+    - If you are familir with pip: 
 
+
+- MACOS
+```shell
+python3 -m venv env
+env/bin/activate.bat
+pip install -r requirements.txt
+```
+
+- Windows
+```shell
 python3 -m venv env
 source env/bin/activate
 pip install -r requirements.txt
+```
+
 
 ## Run
+
+On terminal or cmd
+```shell
 streamlit run reports_app.py
+```
 
 
 
