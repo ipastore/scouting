@@ -34,8 +34,8 @@ pip install -r requirements.txt
 
 - Windows
 ```shell
-python3 -m venv env
-source env/bin/activate
+python -m venv myenv_scouting
+.\myenv_scouting\Scripts\activate.bat
 pip install -r requirements.txt
 ```
 
