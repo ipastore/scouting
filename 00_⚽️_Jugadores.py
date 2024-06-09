@@ -11,6 +11,7 @@ import cloudinary
 from cloudinary import CloudinaryImage
 import cloudinary.uploader
 import cloudinary.api
+import helpers
 
 
 
@@ -67,23 +68,12 @@ st.set_page_config(
 
 alt.themes.enable("dark")
 
-#######################
-#Clear Cache
-def clear_cache():
-    keys = list(st.session_state.keys())
-    for key in keys:
-        st.session_state.pop(key)
-        
-
 # Load data
-df = pd.read_excel("data/source_informes.xlsx")
+df = pd.read_excel("data/source_informes.xlsx", sheet_name="Jugadores")
+
 
 #Init Cloudinary
 config = cloudinary.config(secure=True)
-
-# #Init filters
-# if 'filters' not in st.session_state:
-#     st.session_state['filters'] = ()
 
 
 with st.sidebar:
@@ -122,25 +112,38 @@ with st.sidebar:
 
 df = df[df["Transfermarket"].between(*st.session_state.Filtro_Transfermarket)].reset_index()
 #Filters
-dynamic_filters = DynamicFilters(df, filters=["Posicion", "Pierna Habil", "Division", "Categoria", "Vencimiento_Contrato", "Nombre_Jugador"])
+filter_jugadores =  {
+    "Posicion": None,
+    "Pierna Habil": None,
+    "Division": None,
+    "Categoria": None,
+    "Vencimiento Contrato": None,
+    "Nombre Jugador": None,
+}
 
-dynamic_filters.display_filters(location='sidebar')
+#Filters
+filter_jugadores_name = ["Posicion", "Pierna Habil", 
+                         "Division", "Categoria", "Vencimiento Contrato", 
+                         "Nombre Jugador"]
 
-df = dynamic_filters.filter_df().reset_index()
+dynamic_filters_jugadores = DynamicFilters(df, filter_jugadores)
+dynamic_filters_jugadores.display_filters(location='sidebar')
+
+df = dynamic_filters_jugadores.filter_df().reset_index()
 
 with st.sidebar:
-    st.button('Reset All Filters', on_click=clear_cache)
+    st.button('Reset All Filters', on_click=helpers.clear_cache)
 
 
 #Variables
 
 if len(df) > 1:
-    st.write(df[["Nombre_Jugador", "Posicion", "Pierna Habil", "Transfermarket"]])
+    st.write(df[["Nombre Jugador", "Posicion", "Pierna Habil", "Transfermarket"]])
 
 
 if len(df) == 1:
 
-    Nombre_Jugador = df["Nombre_Jugador"][0]
+    Nombre_Jugador = df["Nombre Jugador"][0]
     Edad =  df["Edad"][0]
     Posicion = df["Posicion"][0]
     Control =  df["Control"][0]
@@ -158,7 +161,7 @@ if len(df) == 1:
     Seleccion = df["Seleccion"][0]
     Altura = df["Altura"][0]
     Peso = df["Peso"][0]
-    Vencimiento_Contrato = df["Vencimiento_Contrato"][0]
+    Vencimiento_Contrato = df["Vencimiento Contrato"][0]
     Sueldo = df["Sueldo"][0]
     Representante = df["Representante"][0]
     Club = df["Club"][0]
