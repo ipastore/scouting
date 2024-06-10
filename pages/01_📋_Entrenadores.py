@@ -60,6 +60,7 @@ if len(df_entrenadores) == 1:
     Esquemas = df_entrenadores["Esquemas Predilectos"][0]
     Nombre_Foto_Entrenador = df_entrenadores["Nombre Foto Entrenador"][0]
     Nombre_Foto_Escudo = df_entrenadores["Nombre Foto Escudo"][0]
+    Nombre_Foto_Plantel_Club = df_entrenadores["Nombre Foto Plantel Club"][0]
     Nombre_Foto_Carrera_Entrenador = df_entrenadores["Nombre Foto Carrera Entrenador"][0]
     Fase_Ofensiva = df_entrenadores["Fase Ofensiva"][0]
     Nombre_Video_Fase_Ofensiva = df_entrenadores["Nombre Video Fase Ofensiva"][0]
@@ -109,6 +110,13 @@ if len(df_entrenadores) == 1:
             st.markdown("Esquemas Predilectos")
         with cols_grid[5]:
             st.markdown(Esquemas)
+
+    ## Plantel Club
+    if not pd.isna(Nombre_Foto_Plantel_Club):
+        st.markdown("#### Plantel")
+        path_Foto_Plantel_Club = f"data/fotos/plantel_club/{Nombre_Foto_Plantel_Club}"
+        result_Foto_Plantel_Club = cloudinary.Search().expression(f"resource_type:image AND public_id={path_Foto_Plantel_Club}").execute()
+        st.image(result_Foto_Plantel_Club["resources"][0]["url"])
 
     ## Carrera Entrenador
     if not pd.isna(Nombre_Foto_Carrera_Entrenador):
