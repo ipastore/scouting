@@ -72,8 +72,11 @@ alt.themes.enable("dark")
 df = pd.read_excel("data/source_informes.xlsx", sheet_name="Jugadores")
 
 
-#Init Cloudinary
-config = cloudinary.config(secure=True)
+# #Init Cloudinary
+# config = cloudinary.config(secure=True)
+config = cloudinary.config(cloud_name=st.secrets["CLOUDINARY_CLOUD_NAME"],
+                            api_key=st.secrets["CLOUDINARY_API_KEY"],
+                            api_secret=st.secrets["CLOUDINARY_SECRET_KEY"])
 
 
 with st.sidebar:
