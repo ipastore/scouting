@@ -136,7 +136,7 @@ if len(df) == 1:
     Nombre_Video_Compacto = df["Nombre_Video_Compacto"][0]
 
 
-    cols = st.columns((10,10,15), gap="small")
+    cols = st.columns((15,8,15), gap="small")
     
     # Foto Juagdor
     with cols[0]:
@@ -146,7 +146,7 @@ if len(df) == 1:
                     width = 150,
                     gravity="faces",
                     crop="fill",
-                    # radius="max",
+                    radius="max",
                     ))
         concat_Nombre_Jugador = "<h2>" + Nombre_Jugador +"</h2>"
         st.caption(concat_Nombre_Jugador, unsafe_allow_html=True)

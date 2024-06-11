@@ -62,6 +62,7 @@ if len(df_entrenadores) == 1:
     Nombre_Foto_Escudo = df_entrenadores["Nombre Foto Escudo"][0]
     Nombre_Foto_Plantel_Club = df_entrenadores["Nombre Foto Plantel Club"][0]
     Nombre_Foto_Carrera_Entrenador = df_entrenadores["Nombre Foto Carrera Entrenador"][0]
+    Nombre_Foto_Carrera_Como_Jugador = df_entrenadores["Nombre Foto Carrera Como Jugador"][0]
     Fase_Ofensiva = df_entrenadores["Fase Ofensiva"][0]
     Nombre_Video_Fase_Ofensiva = df_entrenadores["Nombre Video Fase Ofensiva"][0]
     Fase_Defensiva = df_entrenadores["Fase Defensiva"][0]
@@ -138,6 +139,17 @@ if len(df_entrenadores) == 1:
 
         with cols[1]:
             path_Foto = f"data/fotos/carrera_entrenadores/{Nombre_Foto_Carrera_Entrenador}"
+            st.image(CloudinaryImage(public_id = path_Foto).build_url(
+                    width = 1000))
+    
+    # Carrera Como Jugador
+    if not pd.isna(Nombre_Foto_Carrera_Como_Jugador):
+        st.markdown("#### Carrera como jugador")
+
+        cols = st.columns((4,8,4), gap="small")
+
+        with cols[1]:
+            path_Foto = f"data/fotos/carrera_como_jugador/{Nombre_Foto_Carrera_Como_Jugador}"
             st.image(CloudinaryImage(public_id = path_Foto).build_url(
                     width = 1000))
         
