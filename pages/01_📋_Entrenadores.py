@@ -84,7 +84,7 @@ if len(df_entrenadores) == 1:
                     width = 300,
                     gravity="faces",
                     crop="fill",
-                    # radius="max",
+                    radius="max",
                     ))
         concat_Nombre_Entrenador = "<h3>" + Nombre_Entrenador +"</h3>"
         st.caption(concat_Nombre_Entrenador, unsafe_allow_html=True)
