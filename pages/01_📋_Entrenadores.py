@@ -74,7 +74,7 @@ if len(df_entrenadores) == 1:
     Nombre_Foto_Ultimos_Partidos1 = df_entrenadores["Nombre Foto Ultimos Partidos 1"][0]
     Nombre_Foto_Ultimos_Partidos2 = df_entrenadores["Nombre Foto Ultimos Partidos 2"][0]
 
-    cols = st.columns((10,10,15), gap="small")
+    cols = st.columns((15,8,15), gap="small")
     
     with cols[0]:
         # Foto Entrenador
