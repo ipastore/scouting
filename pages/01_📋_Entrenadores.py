@@ -127,17 +127,6 @@ if len(df_entrenadores) == 1:
         with cols_grid[5]:
             st.markdown(Esquemas)
 
-    # Plantel Club
-    if not pd.isna(Nombre_Foto_Plantel_Club):
-        st.markdown("#### Plantel")
-        
-        cols = st.columns((3,10,3), gap="small")
-
-        with cols[1]:
-            path_Foto = f"data/fotos/plantel_club/{Nombre_Foto_Plantel_Club}"
-            st.image(CloudinaryImage(public_id = path_Foto).build_url(
-                    width = 1000))
-
 
     # Carrera Entrenador
     if not pd.isna(Nombre_Foto_Carrera_Entrenador):
@@ -180,7 +169,20 @@ if len(df_entrenadores) == 1:
         st.markdown("#### Otras Observaciones")
         st.markdown(Otras_Observaciones)  
     if not pd.isna(Nombre_Video_Otras_Observaciones):
-        st.video(Nombre_Video_Otras_Observaciones)	
+        st.video(Nombre_Video_Otras_Observaciones)
+    
+    # Plantel Club
+    if not pd.isna(Nombre_Foto_Plantel_Club):
+        st.markdown("#### Plantel")
+        
+        cols = st.columns((3,10,3), gap="small")
+
+        with cols[1]:
+            path_Foto = f"data/fotos/plantel_club/{Nombre_Foto_Plantel_Club}"
+            st.image(CloudinaryImage(public_id = path_Foto).build_url(
+                    width = 1000))    
+
+
 
     ## Ultimos partidos
     if not pd.isna(Nombre_Foto_Ultimos_Partidos1) or not pd.isna(Nombre_Foto_Ultimos_Partidos2) or not pd.isna(Ultimos_Partidos):
@@ -196,12 +198,14 @@ if len(df_entrenadores) == 1:
         with cols[1]:
         
             # Foto Ultimos Partidos1
-            path_Foto = f"data/fotos/alineaciones/{Nombre_Foto_Ultimos_Partidos1}"
-            st.image(CloudinaryImage(public_id = path_Foto).build_url(
+            if not pd.isna(Nombre_Foto_Ultimos_Partidos1): 
+                path_Foto = f"data/fotos/alineaciones/{Nombre_Foto_Ultimos_Partidos1}"
+                st.image(CloudinaryImage(public_id = path_Foto).build_url(
                         width = 1000))
 
             # Foto Ultimos Partidos2
-            path_Foto = f"data/fotos/alineaciones/{Nombre_Foto_Ultimos_Partidos2}"
-            st.image(CloudinaryImage(public_id = path_Foto).build_url(
+                if not pd.isna(Nombre_Foto_Ultimos_Partidos2): 
+                    path_Foto = f"data/fotos/alineaciones/{Nombre_Foto_Ultimos_Partidos2}"
+                    st.image(CloudinaryImage(public_id = path_Foto).build_url(
                         width = 1000))
 
