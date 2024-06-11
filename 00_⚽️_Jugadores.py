@@ -221,7 +221,7 @@ if len(df) == 1:
             percentiles = [Control,Tension_Pase,Pase_Primera, Anticipo]
             size_radar = 3
 
-            radar = make_radar(names, percentiles, slice_colors, text_colors, size_radar)
+            radar = helpers.make_radar(names, percentiles, slice_colors, text_colors, size_radar)
 
             st.pyplot(radar, use_container_width=False) 
         
@@ -240,7 +240,7 @@ if len(df) == 1:
                            Control,Tension_Pase, Pase_Interior_Circulacion, Pase_Diagonal_Circulacion, Cobertura_Relevo]
             size_radar = 3
     
-            radar = make_radar(names, percentiles, slice_colors, text_colors,size_radar)
+            radar = helpers.make_radar(names, percentiles, slice_colors, text_colors,size_radar)
     
     
             st.pyplot(radar, use_container_width=False) 
