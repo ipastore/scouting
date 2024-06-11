@@ -131,7 +131,7 @@ if len(df_entrenadores) == 1:
     if not pd.isna(Nombre_Foto_Plantel_Club):
         st.markdown("#### Plantel")
         
-        cols = st.columns((5,10,5), gap="small")
+        cols = st.columns((3,10,3), gap="small")
 
         with cols[1]:
 
@@ -151,8 +151,11 @@ if len(df_entrenadores) == 1:
     if not pd.isna(Fase_Ofensiva): 
         st.markdown("#### Fase Ofensiva")
         st.markdown(Fase_Ofensiva)
-    if not pd.isna(Nombre_Video_Fase_Ofensiva): 
-        st.video(Nombre_Video_Fase_Ofensiva)
+    if not pd.isna(Nombre_Video_Fase_Ofensiva):
+
+        cols = st.columns((3,10,3), gap="small")
+        with cols[1]: 
+            st.video(Nombre_Video_Fase_Ofensiva)
 
     ## Fase Defensiva
     if not pd.isna(Fase_Defensiva): 
