@@ -3,7 +3,6 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-from mplsoccer import PyPizza
 from streamlit_dynamic_filters import DynamicFilters
 from dotenv import load_dotenv
 load_dotenv()
@@ -14,50 +13,6 @@ import cloudinary.api
 import helpers
 
 
-
-#######################
-#Functions
-
-#Plot
-def make_radar(names, percentiles, slice_colors, text_colors, size):
-   
-    baker = PyPizza(
-            params=names,                  # list of parameters
-            straight_line_color="#000000",  # color for straight lines
-            straight_line_lw=1,             # linewidth for straight lines
-            last_circle_lw=1,               # linewidth of last circle
-            other_circle_lw=1,              # linewidth for other circles
-            other_circle_ls="-."            # linestyle for other circles
-        )
-    
-    radar, ax = baker.make_pizza(
-        percentiles,              # list of values
-        figsize=(size, size),      # adjust figsize according to your need
-        param_location=110,
-        slice_colors=slice_colors,
-        value_colors = text_colors,
-        value_bck_colors=slice_colors,
-        # where the parameters will be added
-        kwargs_slices=dict(
-            facecolor="cornflowerblue", edgecolor="#000000",
-            zorder=2, linewidth=1
-        ),                   # values to be used when plotting slices
-        kwargs_params=dict(
-            color="#000000", fontsize=5,
-            # fontproperties=font_normal.prop, va="center"
-        ),                   # values to be used when adding parameter
-        kwargs_values=dict(
-            color="#000000", fontsize=5,
-            # fontproperties=font_normal.prop, zorder=3,
-            bbox=dict(
-                edgecolor="#000000", facecolor="cornflowerblue",
-                boxstyle="round,pad=0.2", lw=1
-            )
-         )                    # values to be used when adding parameter-values
-        ) 
-
-    return radar
-
 #######################
 # Page configuration
 st.set_page_config(
@@ -67,18 +22,23 @@ st.set_page_config(
     initial_sidebar_state="expanded")
 
 alt.themes.enable("dark")
+#######################
 
 # Load data
 df = pd.read_excel("data/source_informes.xlsx", sheet_name="Jugadores")
 
 
-# #Init Cloudinary
+##Init Cloudinary
+# # LOCAL
 # config = cloudinary.config(secure=True)
+
+# STREAMLIT
 config = cloudinary.config(cloud_name=st.secrets["CLOUDINARY_CLOUD_NAME"],
                             api_key=st.secrets["CLOUDINARY_API_KEY"],
-                            api_secret=st.secrets["CLOUDINARY_SECRET_KEY"])
+                            api_secret=st.secrets["CLOUDINARY_SECRET_KEY"],
+                            secure=True)
 
-
+#Sidebar
 with st.sidebar:
     col = st.columns((1,5,1), gap='medium')
 
@@ -97,20 +57,16 @@ with st.sidebar:
     st.markdown("### Scouting")
 
 
-#Init Transfermarket
-
+###Init Transfermarket
 if "Filtro_Transfermarket" not in st.session_state:
     st.session_state["Filtro_Transfermarket"] = (0,100)
 
 
 with st.sidebar:
-
     _min = float(df["Transfermarket"].min())
     _max = float(df["Transfermarket"].max())
     step = (_max - _min) / 100
     Filtro_Transfermarket = st.slider( "Valor de Mercado", _min, _max,step=step, key="Filtro_Transfermarket")
-
-
 
 
 df = df[df["Transfermarket"].between(*st.session_state.Filtro_Transfermarket)].reset_index()
@@ -124,7 +80,7 @@ filter_jugadores =  {
     "Nombre Jugador": None,
 }
 
-#Filters
+#Dynamic Filters
 filter_jugadores_name = ["Posicion", "Pierna Habil", 
                          "Division", "Categoria", "Vencimiento Contrato", 
                          "Nombre Jugador"]
@@ -138,14 +94,15 @@ with st.sidebar:
     st.button('Reset All Filters', on_click=helpers.clear_cache)
 
 
-#Variables
-
+#Rendering without filter
 if len(df) > 1:
     st.write(df[["Nombre Jugador", "Posicion", "Pierna Habil", "Transfermarket"]])
 
 
+#Rendering with filter
 if len(df) == 1:
 
+    #Data
     Nombre_Jugador = df["Nombre Jugador"][0]
     Edad =  df["Edad"][0]
     Posicion = df["Posicion"][0]
@@ -171,6 +128,7 @@ if len(df) == 1:
     Transfermarket = df["Transfermarket"][0]
     Nombre_Foto_Carrera_Club = df["Nombre_Foto_Carrera_Club"][0]
     Nombre_Foto_Carrera_Seleccion = df["Nombre_Foto_Carrera_Seleccion"][0]
+    Aspectos_Tecnicos = df["Aspectos_Tecnicos"][0]
 
     cols = st.columns((10,10,10), gap="small")
     
@@ -289,7 +247,6 @@ if len(df) == 1:
 
     
     st.markdown("#### Aspectos Técnicos")
-    Aspectos_Tecnicos = df["Aspectos_Tecnicos"][0]
     st.markdown(Aspectos_Tecnicos)
 
     st.markdown("#### Aspectos Tácticos")

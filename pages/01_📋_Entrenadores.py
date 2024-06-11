@@ -74,58 +74,80 @@ if len(df_entrenadores) == 1:
     Nombre_Foto_Ultimos_Partidos1 = df_entrenadores["Nombre Foto Ultimos Partidos 1"][0]
     Nombre_Foto_Ultimos_Partidos2 = df_entrenadores["Nombre Foto Ultimos Partidos 2"][0]
 
-    cols = st.columns((10,10,10), gap="small")
+    cols = st.columns((10,10,15), gap="small")
     
     with cols[0]:
-        path_Foto_Entrenador = f"data/fotos/entrenadores/{Nombre_Foto_Entrenador}"
-        result_photo = cloudinary.Search().expression(f"resource_type:image AND public_id={path_Foto_Entrenador}").execute()
-        st.image(result_photo["resources"][0]["url"])
-        concat_Nombre_Entrenador = "<h2>" + Nombre_Entrenador +"</h2>"
+        # Foto Entrenador
+        path_Foto = f"data/fotos/entrenadores/{Nombre_Foto_Entrenador}"
+        st.image(CloudinaryImage(public_id = path_Foto).build_url(
+                    aspect_ratio = "1.0",
+                    width = 150,
+                    gravity="faces",
+                    crop="fill",
+                    radius="max"))
+        concat_Nombre_Entrenador = "<h3>" + Nombre_Entrenador +"</h3>"
         st.caption(concat_Nombre_Entrenador, unsafe_allow_html=True)
 
     with cols[1]:
-        path_Foto_Escudo = f"data/fotos/escudos/{Nombre_Foto_Escudo}"
-        concat_Club = "<h2>" + Club +"</h2>"
-        result_photo = cloudinary.Search().expression(f"resource_type:image AND public_id={path_Foto_Escudo}").execute()
-        st.image(result_photo["resources"][0]["url"])
+        # Foto Escudo    
+        path_Foto = f"data/fotos/escudos/{Nombre_Foto_Escudo}"
+        concat_Club = "<h3>" + Club +"</h3>"
+        st.image(CloudinaryImage(public_id = path_Foto).build_url(
+            aspect_ratio = "1.0",
+            width = 150,
+            gravity="faces",
+            crop="fill",
+            radius="max"))
         st.caption(concat_Club, unsafe_allow_html=True)
     
     with cols[2]:
+        # Descripciones
         n_cols = 2
         n_rows = 3
         rows = [st.container() for _ in range(n_rows)]
         cols_per_row = [r.columns(n_cols) for r in rows]
         cols_grid = [column for row in cols_per_row for column in row]
 
+        ## Nacionalidad
         with cols_grid[0]:
-            st.write("Nacionalidad")
+            st.markdown("<p><b>Nacionalidad</b></p>", unsafe_allow_html=True)
         with cols_grid[1]:
             st.markdown(Nacionalidad)
+        
+        ## Fecha de Nacimiento
         with cols_grid[2]:
-            st.markdown("Fecha de Nacimiento")
+            st.markdown("<p><b>Fecha de Nacimiento</b></p>", unsafe_allow_html=True)
         with cols_grid[3]:
             concat_Fecha_Nacimiento_Edad = str(Fecha_Nacimiento) + " (" + str(Edad) + " años)"
             st.markdown(concat_Fecha_Nacimiento_Edad)
+        
+        ## Esquemas Predilectos
         with cols_grid[4]:
-            st.markdown("Esquemas Predilectos")
+            st.markdown("<p><b>Esquemas predilectos</b></p>", unsafe_allow_html=True)
         with cols_grid[5]:
             st.markdown(Esquemas)
 
-    ## Plantel Club
+    # Plantel Club
     if not pd.isna(Nombre_Foto_Plantel_Club):
         st.markdown("#### Plantel")
-        path_Foto_Plantel_Club = f"data/fotos/plantel_club/{Nombre_Foto_Plantel_Club}"
-        result_Foto_Plantel_Club = cloudinary.Search().expression(f"resource_type:image AND public_id={path_Foto_Plantel_Club}").execute()
-        st.image(result_Foto_Plantel_Club["resources"][0]["url"])
+        
+        cols = st.columns((5,10,5), gap="small")
 
-    ## Carrera Entrenador
+        with cols[1]:
+
+            path_Foto = f"data/fotos/plantel_club/{Nombre_Foto_Plantel_Club}"
+            st.image(CloudinaryImage(public_id = path_Foto).build_url(
+                    width = 1000))
+
+
+    # Carrera Entrenador
     if not pd.isna(Nombre_Foto_Carrera_Entrenador):
         st.markdown("#### Carrera Entrenador")
-        path_Foto_Carrera_Entrenador = f"data/fotos/carrera_entrenadores/{Nombre_Foto_Carrera_Entrenador}"
-        result_Foto_Carrera_Entrenador = cloudinary.Search().expression(f"resource_type:image AND public_id={path_Foto_Carrera_Entrenador}").execute()
-        st.image(result_Foto_Carrera_Entrenador["resources"][0]["url"])
+        path_Foto = f"data/fotos/carrera_entrenadores/{Nombre_Foto_Carrera_Entrenador}"
+        st.image(CloudinaryImage(public_id = path_Foto).build_url(
+                    width = 1000))
         
-    ## Fase Ofensiva
+    # Fase Ofensiva
     if not pd.isna(Fase_Ofensiva): 
         st.markdown("#### Fase Ofensiva")
         st.markdown(Fase_Ofensiva)
@@ -135,8 +157,7 @@ if len(df_entrenadores) == 1:
     ## Fase Defensiva
     if not pd.isna(Fase_Defensiva): 
         st.markdown("#### Fase Defensiva")
-        st.markdown(Fase_Defensiva)
-    
+        st.markdown(Fase_Defensiva) 
     if not pd.isna(Nombre_Video_Fase_Defensiva):
         st.video(Nombre_Video_Fase_Defensiva)
     
@@ -144,7 +165,6 @@ if len(df_entrenadores) == 1:
     if not pd.isna(Transiciones):
         st.markdown("#### Transiciones")
         st.markdown(Transiciones)
-
     if not pd.isna(Nombre_Video_Transiciones):    
         st.video(Nombre_Video_Transiciones)	
 
@@ -152,22 +172,30 @@ if len(df_entrenadores) == 1:
     ## Observaciones   
     if not pd.isna(Otras_Observaciones): 
         st.markdown("#### Otras Observaciones")
-        st.markdown(Otras_Observaciones)
-    
+        st.markdown(Otras_Observaciones)  
     if not pd.isna(Nombre_Video_Otras_Observaciones):
         st.video(Nombre_Video_Otras_Observaciones)	
 
-    ## Ultimos Partidos
-    if not pd.isna(Ultimos_Partidos):
+    ## Ultimos partidos
+    if not pd.isna(Nombre_Foto_Ultimos_Partidos1) or not pd.isna(Nombre_Foto_Ultimos_Partidos2) or not pd.isna(Ultimos_Partidos):
         st.markdown("#### Últimos Partidos")
-        st.markdown(Ultimos_Partidos)
-    
-    if not pd.isna(Nombre_Foto_Ultimos_Partidos1) or not pd.isna(Nombre_Foto_Ultimos_Partidos2):
-        path_Nombre_Foto_Ultimos_Partidos1 = f"data/fotos/alineaciones/{Nombre_Foto_Ultimos_Partidos1}"
-        result_Foto_Ultimos_Partidos1 = cloudinary.Search().expression(f"resource_type:image AND public_id={path_Nombre_Foto_Ultimos_Partidos1}").execute()
-        st.image(result_Foto_Ultimos_Partidos1["resources"][0]["url"])
-    
-        path_Nombre_Foto_Ultimos_Partidos2 = f"data/fotos/alineaciones/{Nombre_Foto_Ultimos_Partidos2}"
-        result_Foto_Ultimos_Partidos2 = cloudinary.Search().expression(f"resource_type:image AND public_id={path_Nombre_Foto_Ultimos_Partidos2}").execute()
-        st.image(result_Foto_Ultimos_Partidos2["resources"][0]["url"])
+        
+        # Descripcion Ultimos Partidos
+        if not pd.isna(Ultimos_Partidos):
+            st.markdown(Ultimos_Partidos)
+        
+
+        cols = st.columns((5,10,5), gap="small")
+
+        with cols[1]:
+        
+            # Foto Ultimos Partidos1
+            path_Foto = f"data/fotos/alineaciones/{Nombre_Foto_Ultimos_Partidos1}"
+            st.image(CloudinaryImage(public_id = path_Foto).build_url(
+                        width = 1000))
+
+            # Foto Ultimos Partidos2
+            path_Foto = f"data/fotos/alineaciones/{Nombre_Foto_Ultimos_Partidos2}"
+            st.image(CloudinaryImage(public_id = path_Foto).build_url(
+                        width = 1000))
 
