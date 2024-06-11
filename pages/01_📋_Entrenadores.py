@@ -134,7 +134,6 @@ if len(df_entrenadores) == 1:
         cols = st.columns((3,10,3), gap="small")
 
         with cols[1]:
-
             path_Foto = f"data/fotos/plantel_club/{Nombre_Foto_Plantel_Club}"
             st.image(CloudinaryImage(public_id = path_Foto).build_url(
                     width = 1000))
@@ -143,8 +142,12 @@ if len(df_entrenadores) == 1:
     # Carrera Entrenador
     if not pd.isna(Nombre_Foto_Carrera_Entrenador):
         st.markdown("#### Carrera Entrenador")
-        path_Foto = f"data/fotos/carrera_entrenadores/{Nombre_Foto_Carrera_Entrenador}"
-        st.image(CloudinaryImage(public_id = path_Foto).build_url(
+
+        cols = st.columns((2,10,2), gap="small")
+
+        with cols[1]:
+            path_Foto = f"data/fotos/carrera_entrenadores/{Nombre_Foto_Carrera_Entrenador}"
+            st.image(CloudinaryImage(public_id = path_Foto).build_url(
                     width = 1000))
         
     # Fase Ofensiva
