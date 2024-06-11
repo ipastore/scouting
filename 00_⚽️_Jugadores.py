@@ -143,7 +143,7 @@ if len(df) == 1:
         path_Foto = f"data/fotos/jugadores/{Nombre_Foto_Jugador}"
         st.image(CloudinaryImage(public_id = path_Foto).build_url(
                     aspect_ratio = "1.0",
-                    width = 150,
+                    width = 300,
                     gravity="faces",
                     crop="fill",
                     radius="max",
