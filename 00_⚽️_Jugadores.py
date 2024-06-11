@@ -174,61 +174,88 @@ if len(df) == 1:
 
         # Nacionalidad
         with cols_grid[0]:
-            st.markdown("<p><b>Nacionalidad</b></p>")
+            st.markdown("<p><b>Nacionalidad</b></p>", unsafe_allow_html=True)
         with cols_grid[1]:
-            st.markdown(Nacionalidad, unsafe_allow_html=True)
+            if not pd.isna(Nacionalidad):
+                st.markdown(Nacionalidad)
+            else:
+                st.markdown("-")
         
         # Seleccion Nacional
         with cols_grid[2]:
-            st.markdown("<p><b>Selección Nacional</b></p>")
+            st.markdown("<p><b>Selección Nacional</b></p>", unsafe_allow_html=True)
         with cols_grid[3]:
-            st.markdown(Seleccion, unsafe_allow_html=True)
+            if not pd.isna(Seleccion):
+                st.markdown(Seleccion)
+            else:
+                st.markdown("-")        
         
         # Altura
         with cols_grid[4]:
-            st.markdown("<p><b>Altura</b></p>")
+            st.markdown("<p><b>Altura</b></p>", unsafe_allow_html=True)
         with cols_grid[5]:
-            concat_Altura = str(Altura) + " m"
-            st.markdown(concat_Altura, unsafe_allow_html=True)
+            if not pd.isna(Altura):
+                concat_Altura = str(Altura) + " m"
+                st.markdown(concat_Altura)
+            else:
+                st.markdown("-")
        
         # Peso
         with cols_grid[6]:
-            st.markdown("<p><b>Peso</b></p>")
+            st.markdown("<p><b>Peso</b></p>", unsafe_allow_html=True)
         with cols_grid[7]:
-            concat_Peso = str(Peso) + " kg"
-            st.markdown(concat_Peso, unsafe_allow_html=True)
+            if not pd.isna(Peso):
+                concat_Peso = str(Peso) + " kg"
+                st.markdown(concat_Peso)
+            else:
+                st.markdown("-")
         
         # Pierna Habil
         with cols_grid[8]:
-            st.markdown("<p><b>Pierna Hábil</b></p>")
+            st.markdown("<p><b>Pierna Hábil</b></p>", unsafe_allow_html=True)
         with cols_grid[9]:
-            st.markdown(Pierna, unsafe_allow_html=True)
+            if not pd.isna(Pierna):
+                st.markdown(Pierna)
+            else:
+                st.markdown("-")
         
         # Vencimiento Contrato
         with cols_grid[10]:
-            st.markdown("<p><b>Fin de Contrato</b></p>")
+            st.markdown("<p><b>Fin de Contrato</b></p>", unsafe_allow_html=True)
         with cols_grid[11]:
-            st.markdown(Vencimiento_Contrato, unsafe_allow_html=True) 
+            if not pd.isna(Vencimiento_Contrato):
+                st.markdown(Vencimiento_Contrato) 
+            else:
+                st.markdown("-") 
         
         # Valor de Mercado
         with cols_grid[12]:
-            st.markdown("<p><b>Valor de Mercado</b></p>")
+            st.markdown("<p><b>Valor de Mercado</b></p>", unsafe_allow_html=True)
         with cols_grid[13]:
-            concat_Transfermarket = str(Transfermarket) + " MM"
-            st.markdown(concat_Transfermarket, unsafe_allow_html=True)
+            if not pd.isna(Transfermarket):
+                concat_Transfermarket = str(Transfermarket) + " MM"
+                st.markdown(concat_Transfermarket)
+            else:
+                st.markdown("-")
         
         # Sueldo
         with cols_grid[14]:
-            st.markdown("<p><b>Sueldo</b></p>")
+            st.markdown("<p><b>Sueldo</b></p>", unsafe_allow_html=True)
         with cols_grid[15]:
-            concat_Sueldo = str(Sueldo) + " USD"
-            st.markdown(concat_Sueldo, unsafe_allow_html=True)
+            if not pd.isna(Sueldo):
+                concat_Sueldo = str(Sueldo) + " USD"
+                st.markdown(concat_Sueldo)
+            else:
+                st.markdown("-")
 
         # Representante
         with cols_grid[16]:
-            st.markdown("<p><b>Representante</b></p>")
+            st.markdown("<p><b>Representante</b></p>", unsafe_allow_html=True)
         with cols_grid[17]:
-            st.markdown(Representante, unsafe_allow_html=True)
+            if not pd.isna(Representante):
+                st.markdown(Representante)
+            else:
+                st.markdown("-")
 
     
     # Carreras
