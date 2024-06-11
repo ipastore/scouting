@@ -129,23 +129,42 @@ if len(df) == 1:
     Nombre_Foto_Carrera_Club = df["Nombre_Foto_Carrera_Club"][0]
     Nombre_Foto_Carrera_Seleccion = df["Nombre_Foto_Carrera_Seleccion"][0]
     Aspectos_Tecnicos = df["Aspectos_Tecnicos"][0]
+    Aspectos_Tacticos = df["Aspectos_Tacticos"][0]
+    Aspectos_Fisicos = df["Aspectos_Fisicos"][0]
+    Personalidad = df["Personalidad"][0]
+    Otras_Observaciones = df["Otras_Observaciones"][0]
+    Nombre_Video_Compacto = df["Nombre_Video_Compacto"][0]
 
-    cols = st.columns((10,10,10), gap="small")
+
+    cols = st.columns((10,10,15), gap="small")
     
+    # Foto Juagdor
     with cols[0]:
-        path_Foto_Jugador = f"data/fotos/jugadores/{Nombre_Foto_Jugador}"
-        result_photo = cloudinary.Search().expression(f"resource_type:image AND public_id={path_Foto_Jugador}").execute()
-        st.image(result_photo["resources"][0]["url"])
+        path_Foto = f"data/fotos/jugadores/{Nombre_Foto_Jugador}"
+        st.image(CloudinaryImage(public_id = path_Foto).build_url(
+                    aspect_ratio = "1.0",
+                    width = 150,
+                    gravity="faces",
+                    crop="fill",
+                    # radius="max",
+                    ))
         concat_Nombre_Jugador = "<h2>" + Nombre_Jugador +"</h2>"
         st.caption(concat_Nombre_Jugador, unsafe_allow_html=True)
     
+    # Foto Escudo
     with cols[1]:
-        path_Foto_Escudo = f"data/fotos/escudos/{Nombre_Foto_Escudo}"
+        path_Foto = f"data/fotos/escudos/{Nombre_Foto_Escudo}"
+        st.image(CloudinaryImage(public_id = path_Foto).build_url(
+                    aspect_ratio = "1.0",
+                    width = 150,
+                    gravity="faces",
+                    crop="fill",
+                    # radius="max",
+                    ))
         concat_Club = "<h2>" + Club +"</h2>"
-        result_photo = cloudinary.Search().expression(f"resource_type:image AND public_id={path_Foto_Escudo}").execute()
-        st.image(result_photo["resources"][0]["url"])
         st.caption(concat_Club, unsafe_allow_html=True)
     
+    # Grid de Informacion
     with cols[2]:
         n_cols = 2
         n_rows = 9
@@ -153,64 +172,99 @@ if len(df) == 1:
         cols_per_row = [r.columns(n_cols) for r in rows]
         cols_grid = [column for row in cols_per_row for column in row]
 
+        # Nacionalidad
         with cols_grid[0]:
-            st.write("Nacionalidad")
+            st.markdown("<p><b>Nacionalidad</b></p>")
         with cols_grid[1]:
-            st.markdown(Nacionalidad)
+            st.markdown(Nacionalidad, unsafe_allow_html=True)
+        
+        # Seleccion Nacional
         with cols_grid[2]:
-            st.markdown("Selección Nacional")
+            st.markdown("<p><b>Selección Nacional</b></p>")
         with cols_grid[3]:
-            st.markdown(Seleccion)  
+            st.markdown(Seleccion, unsafe_allow_html=True)
+        
+        # Altura
         with cols_grid[4]:
-            st.markdown("Altura")
+            st.markdown("<p><b>Altura</b></p>")
         with cols_grid[5]:
             concat_Altura = str(Altura) + " m"
-            st.markdown(concat_Altura)
+            st.markdown(concat_Altura, unsafe_allow_html=True)
+       
+        # Peso
         with cols_grid[6]:
-            st.markdown("Peso")
+            st.markdown("<p><b>Peso</b></p>")
         with cols_grid[7]:
             concat_Peso = str(Peso) + " kg"
-            st.markdown(concat_Peso)
+            st.markdown(concat_Peso, unsafe_allow_html=True)
+        
+        # Pierna Habil
         with cols_grid[8]:
-            st.markdown("Pierna Hábil")
+            st.markdown("<p><b>Pierna Hábil</b></p>")
         with cols_grid[9]:
-            st.markdown(Pierna)
+            st.markdown(Pierna, unsafe_allow_html=True)
+        
+        # Vencimiento Contrato
         with cols_grid[10]:
-            st.markdown("Fin de Contrato")
+            st.markdown("<p><b>Fin de Contrato</b></p>")
         with cols_grid[11]:
-            st.markdown(Vencimiento_Contrato)  
+            st.markdown(Vencimiento_Contrato, unsafe_allow_html=True) 
+        
+        # Valor de Mercado
         with cols_grid[12]:
-            st.markdown("Valor de Mercado")
+            st.markdown("<p><b>Valor de Mercado</b></p>")
         with cols_grid[13]:
             concat_Transfermarket = str(Transfermarket) + " MM"
-            st.markdown(concat_Transfermarket)
+            st.markdown(concat_Transfermarket, unsafe_allow_html=True)
+        
+        # Sueldo
         with cols_grid[14]:
-            st.markdown("Sueldo")
+            st.markdown("<p><b>Sueldo</b></p>")
         with cols_grid[15]:
             concat_Sueldo = str(Sueldo) + " USD"
-            st.markdown(concat_Sueldo)
-        with cols_grid[16]:
-            st.markdown("Representante")
-        with cols_grid[17]:
-            st.markdown(Representante)
+            st.markdown(concat_Sueldo, unsafe_allow_html=True)
 
+        # Representante
+        with cols_grid[16]:
+            st.markdown("<p><b>Representante</b></p>")
+        with cols_grid[17]:
+            st.markdown(Representante, unsafe_allow_html=True)
+
+    
+    # Carreras
     cols = st.columns((10,10), gap="small")
 
+    # Carrera Club
     with cols[0]:
-        path_Foto_Carrera_Club = f"data/fotos/carrera_club/{Nombre_Foto_Carrera_Club}"
-        st.markdown("#### Carrera en Clubes")
-        result_photo = cloudinary.Search().expression(f"resource_type:image AND public_id={path_Foto_Carrera_Club}").execute()
-        st.image(result_photo["resources"][0]["url"])
+        if not pd.isna(Nombre_Foto_Carrera_Club): 
+                st.markdown("#### Carrera en Clubes")
+                path_Foto= f"data/fotos/carrera_club/{Nombre_Foto_Carrera_Club}"
+                st.image(CloudinaryImage(public_id = path_Foto).build_url(
+                    # aspect_ratio = "1.0",
+                    # width = 150,
+                    # gravity="faces",
+                    # crop="fill",
+                    # radius="max",
+                    ))
+
    
+    # Carrera Seleccion
     with cols[1]:
-        path_Foto_Carrera_Seleccion = f"data/fotos/carrera_seleccion/{Nombre_Foto_Carrera_Seleccion}"
-        st.markdown("#### Carrera en Seleccion")
-        result_photo = cloudinary.Search().expression(f"resource_type:image AND public_id={path_Foto_Carrera_Seleccion}").execute()
-        st.image(result_photo["resources"][0]["url"])
+        if not pd.isna(Nombre_Foto_Carrera_Seleccion):
+                st.markdown("#### Carrera en Seleccion")
+                path_Foto = f"data/fotos/carrera_seleccion/{Nombre_Foto_Carrera_Seleccion}"
+                st.image(CloudinaryImage(public_id = path_Foto).build_url(
+                    # aspect_ratio = "1.0",
+                    # width = 150,
+                    # gravity="faces",
+                    # crop="fill",
+                    # radius="max",
+                    ))
 
-
+    # Radar
     cols = st.columns((5,10,5), gap="small")
     
+    # Radar Volante Contencion
     if Posicion == "Volante Contencion":
         
         with cols[1]:
@@ -223,8 +277,9 @@ if len(df) == 1:
 
             radar = helpers.make_radar(names, percentiles, slice_colors, text_colors, size_radar)
 
-            st.pyplot(radar, use_container_width=False) 
-        
+            st.pyplot(radar, use_container_width=False)
+
+    # Radar Volante Ofensivo
     elif Posicion == "Volante Ofensivo":
 
         with cols[1]:
@@ -246,42 +301,47 @@ if len(df) == 1:
             st.pyplot(radar, use_container_width=False) 
 
     
-    st.markdown("#### Aspectos Técnicos")
-    st.markdown(Aspectos_Tecnicos)
+    # Aspectos Tecnicos
+    if not pd.isna(Aspectos_Tecnicos):
+        st.markdown("#### Aspectos Técnicos")
+        st.markdown(Aspectos_Tecnicos)
 
-    st.markdown("#### Aspectos Tácticos")
-    Aspectos_Tacticos = df["Aspectos_Tacticos"][0]
-    st.markdown(Aspectos_Tacticos)
+    # Aspectos Tacticos
+    if not pd.isna(Aspectos_Tacticos):
+        st.markdown("#### Aspectos Tácticos")
+        st.markdown(Aspectos_Tacticos)
     
-    st.markdown("#### Aspectos Físicos")
-    Aspectos_Fisicos = df["Aspectos_Fisicos"][0]
-    st.markdown(Aspectos_Fisicos)	
+    # Aspectos Fisicos
+    if not pd.isna(Aspectos_Fisicos):
+        st.markdown("#### Aspectos Físicos")
+        st.markdown(Aspectos_Fisicos)	
     
-    st.markdown("#### Personalidad y Perfil Psicológico")
-    Personalidad = df["Personalidad"][0]
-    st.markdown(Personalidad)	
+    # Personalidad
+    if not pd.isna(Personalidad):
+        st.markdown("#### Personalidad y Perfil Psicológico")
+        st.markdown(Personalidad)	
 
-    st.markdown("#### Otras Observaciones")
-    Otras_Observaciones = df["Otras_Observaciones"][0]
-    st.markdown(Otras_Observaciones)	
+    # Otras Observaciones
+    if not pd.isna(Otras_Observaciones):
+        st.markdown("#### Otras Observaciones")
+        st.markdown(Otras_Observaciones)	
 
-
-    st.markdown("#### Video Compacto")
-    Nombre_Video_Compacto = df["Nombre_Video_Compacto"][0]
-    st.video(Nombre_Video_Compacto)
+    # Video Compacto
+    if not pd.isna(Otras_Observaciones):
+        st.markdown("#### Video Compacto")
+        st.video(Nombre_Video_Compacto)
   
 
-    # #Video
-    for x in range(Cantidad_Videos):
-        concat_Nombre_Video = "Nombre_Video_" + str(x+1)
-        concat_Descripcion_Video = "Descripcion_Video_" + str(x+1)
-        concat_Titulo_video = "Titulo_Video_" + str(x+1)
-        Titulo_Video = df[concat_Titulo_video][0]
-        Nombre_Video = df[concat_Nombre_Video][0]
-        Descripcion_Video = df[concat_Descripcion_Video][0]
-        string_Titulo_Video = "#### " + Titulo_Video
-        st.markdown(string_Titulo_Video)
-        st.video(Nombre_Video)
-        st.markdown(Descripcion_Video)
-
-
+    #Videos partidos
+    if not pd.isna(Cantidad_Videos):
+        for x in range(Cantidad_Videos):
+            concat_Nombre_Video = "Nombre_Video_" + str(x+1)
+            concat_Descripcion_Video = "Descripcion_Video_" + str(x+1)
+            concat_Titulo_video = "Titulo_Video_" + str(x+1)
+            Titulo_Video = df[concat_Titulo_video][0]
+            Nombre_Video = df[concat_Nombre_Video][0]
+            Descripcion_Video = df[concat_Descripcion_Video][0]
+            string_Titulo_Video = "#### " + Titulo_Video
+            st.markdown(string_Titulo_Video)
+            st.video(Nombre_Video)
+            st.markdown(Descripcion_Video)
