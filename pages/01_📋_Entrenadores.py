@@ -95,10 +95,10 @@ if len(df_entrenadores) == 1:
         path_Foto = f"data/fotos/escudos/{Nombre_Foto_Escudo}"
         concat_Club = "<h3>" + Club +"</h3>"
         st.image(CloudinaryImage(public_id = path_Foto).build_url(
-            aspect_ratio = "1.0",
-            width = 200,
-            gravity="faces",
-            crop="fill",
+            # aspect_ratio = "1.0",
+            # width = 200,
+            # gravity="faces",
+            # crop="fill",
             # radius="max",
             ))
         st.caption(concat_Club, unsafe_allow_html=True)
