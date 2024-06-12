@@ -96,7 +96,7 @@ if len(df_entrenadores) == 1:
         concat_Club = "<h3>" + Club +"</h3>"
         st.image(CloudinaryImage(public_id = path_Foto).build_url(
             aspect_ratio = "1.0",
-            width = 150,
+            width = 200,
             gravity="faces",
             crop="fill",
             # radius="max",
@@ -199,7 +199,6 @@ if len(df_entrenadores) == 1:
             path_Foto = f"data/fotos/plantel_club/{Nombre_Foto_Plantel_Club}"
             st.image(CloudinaryImage(public_id = path_Foto).build_url(
                     width = 1000))    
-
 
 
     ## Ultimos partidos

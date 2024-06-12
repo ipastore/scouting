@@ -44,7 +44,7 @@ with st.sidebar:
 
     with col[1]:
         Nombre_Escudo = "sanlorenzoescudo"
-        path_Foto = f"data/fotos/jugadores/{Nombre_Escudo}"
+        path_Foto = f"data/fotos/escudos/{Nombre_Escudo}"
         st.image(CloudinaryImage(public_id = path_Foto).build_url(
                     # aspect_ratio = "1.0",
                     # width = 300,
