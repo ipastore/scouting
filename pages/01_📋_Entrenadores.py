@@ -75,7 +75,7 @@ if len(df_entrenadores) == 1:
     Nombre_Foto_Ultimos_Partidos1 = df_entrenadores["Nombre Foto Ultimos Partidos 1"][0]
     Nombre_Foto_Ultimos_Partidos2 = df_entrenadores["Nombre Foto Ultimos Partidos 2"][0]
 
-    cols = st.columns((15,8,15), gap="small")
+    cols = st.columns((15,6,15), gap="small")
     
     with cols[0]:
         # Foto Entrenador
@@ -95,8 +95,8 @@ if len(df_entrenadores) == 1:
         path_Foto = f"data/fotos/escudos/{Nombre_Foto_Escudo}"
         concat_Club = "<h3>" + Club +"</h3>"
         st.image(CloudinaryImage(public_id = path_Foto).build_url(
-            # aspect_ratio = "1.0",
-            # width = 200,
+            aspect_ratio = "1.0",
+            width = 200,
             # gravity="faces",
             # crop="fill",
             # radius="max",
