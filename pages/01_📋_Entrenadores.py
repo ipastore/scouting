@@ -85,7 +85,7 @@ if len(df_entrenadores) == 1:
                     width = 300,
                     gravity="faces",
                     crop="fill",
-                    radius="max",
+                    # radius="max",
                     ))
         concat_Nombre_Entrenador = "<h3>" + Nombre_Entrenador +"</h3>"
         st.caption(concat_Nombre_Entrenador, unsafe_allow_html=True)
@@ -135,7 +135,7 @@ if len(df_entrenadores) == 1:
     if not pd.isna(Nombre_Foto_Carrera_Entrenador):
         st.markdown("#### Carrera Entrenador")
 
-        cols = st.columns((2,10,2), gap="small")
+        cols = st.columns((2,8,2), gap="small")
 
         with cols[1]:
             path_Foto = f"data/fotos/carrera_entrenadores/{Nombre_Foto_Carrera_Entrenador}"
@@ -154,42 +154,46 @@ if len(df_entrenadores) == 1:
                     width = 1000))
         
     # Fase Ofensiva
-    if not pd.isna(Fase_Ofensiva): 
-        st.markdown("#### Fase Ofensiva")
-        st.markdown(Fase_Ofensiva)
     if not pd.isna(Nombre_Video_Fase_Ofensiva):
-
+        st.markdown("#### Fase Ofensiva")
         cols = st.columns((3,10,3), gap="small")
         with cols[1]: 
             st.video(Nombre_Video_Fase_Ofensiva)
+    if not pd.isna(Fase_Ofensiva): 
+        st.markdown(Fase_Ofensiva)
 
     ## Fase Defensiva
-    if not pd.isna(Fase_Defensiva): 
-        st.markdown("#### Fase Defensiva")
-        st.markdown(Fase_Defensiva) 
     if not pd.isna(Nombre_Video_Fase_Defensiva):
-        st.video(Nombre_Video_Fase_Defensiva)
+        st.markdown("#### Fase Defensiva")
+        cols = st.columns((3,10,3), gap="small")
+        with cols[1]:
+            st.video(Nombre_Video_Fase_Defensiva)
+    if not pd.isna(Fase_Defensiva): 
+        st.markdown(Fase_Defensiva) 
     
     ## Transiciones
-    if not pd.isna(Transiciones):
-        st.markdown("#### Transiciones")
-        st.markdown(Transiciones)
     if not pd.isna(Nombre_Video_Transiciones):    
-        st.video(Nombre_Video_Transiciones)	
-
+        st.markdown("#### Transiciones")
+        cols = st.columns((3,10,3), gap="small")
+        with cols[1]:
+            st.video(Nombre_Video_Transiciones)	
+    if not pd.isna(Transiciones):
+        st.markdown(Transiciones)
 
     ## Observaciones   
-    if not pd.isna(Otras_Observaciones): 
-        st.markdown("#### Otras Observaciones")
-        st.markdown(Otras_Observaciones)  
     if not pd.isna(Nombre_Video_Otras_Observaciones):
-        st.video(Nombre_Video_Otras_Observaciones)
+        st.markdown("#### Otras Observaciones")
+        cols = st.columns((3,10,3), gap="small")
+        with cols[1]:
+            st.video(Nombre_Video_Otras_Observaciones)
+    if not pd.isna(Otras_Observaciones): 
+        st.markdown(Otras_Observaciones)  
     
     # Plantel Club
     if not pd.isna(Nombre_Foto_Plantel_Club):
         st.markdown("#### Plantel")
         
-        cols = st.columns((3,10,3), gap="small")
+        cols = st.columns((4,10,4), gap="small")
 
         with cols[1]:
             path_Foto = f"data/fotos/plantel_club/{Nombre_Foto_Plantel_Club}"
@@ -201,11 +205,9 @@ if len(df_entrenadores) == 1:
     ## Ultimos partidos
     if not pd.isna(Nombre_Foto_Ultimos_Partidos1) or not pd.isna(Nombre_Foto_Ultimos_Partidos2) or not pd.isna(Ultimos_Partidos):
         st.markdown("#### Últimos Partidos")
-        
         # Descripcion Ultimos Partidos
         if not pd.isna(Ultimos_Partidos):
             st.markdown(Ultimos_Partidos)
-        
 
         cols = st.columns((5,10,5), gap="small")
 

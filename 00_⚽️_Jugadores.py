@@ -43,10 +43,15 @@ with st.sidebar:
     col = st.columns((1,5,1), gap='medium')
 
     with col[1]:
-        Nombre_Escudo = "San_Lorenzo"
-        path_Escudo = f"data/fotos/escudos/{Nombre_Escudo}"
-        result_photo = cloudinary.Search()  .expression(f"resource_type:image AND public_id={path_Escudo}").execute()
-        st.image(result_photo["resources"][0]["url"], width=100)
+        Nombre_Escudo = "sanlorenzoescudo"
+        path_Foto = f"data/fotos/jugadores/{Nombre_Escudo}"
+        st.image(CloudinaryImage(public_id = path_Foto).build_url(
+                    # aspect_ratio = "1.0",
+                    # width = 300,
+                    # gravity="faces",
+                    # crop="fill",
+                    # radius="max",
+                    ))
 
     
     col = st.columns((5,50,5), gap='medium')
@@ -146,7 +151,7 @@ if len(df) == 1:
                     width = 300,
                     gravity="faces",
                     crop="fill",
-                    radius="max",
+                    # radius="max",
                     ))
         concat_Nombre_Jugador = "<h2>" + Nombre_Jugador +"</h2>"
         st.caption(concat_Nombre_Jugador, unsafe_allow_html=True)
