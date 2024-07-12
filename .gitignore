@@ -5,3 +5,4 @@
 **/._.DS_Store
 .pytest_cache
 **/__pycache__
+~$output.xlsx

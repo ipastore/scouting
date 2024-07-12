@@ -11,6 +11,8 @@ from cloudinary import CloudinaryImage
 import cloudinary.uploader
 import cloudinary.api
 import helpers
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 #######################
@@ -24,22 +26,50 @@ st.set_page_config(
 alt.themes.enable("dark")
 #######################
 
-# # Load data LOCAL
-# df = pd.read_excel("data/source_informes_LOCAL.xlsx", sheet_name="Jugadores")
-
 
 # #Init Cloudinary
 # # LOCAL
 # config = cloudinary.config(secure=True)
 
-# Load data
-df = pd.read_excel("data/source_informes.xlsx", sheet_name="Jugadores")
+# # Load data LOCAL para Branches
+# df_Arquero = pd.read_excel("data/source_informes_LOCAL.xlsx", sheet_name="Arquero")
+# df_Central = pd.read_excel("data/source_informes_LOCAL.xlsx", sheet_name="Central")
+# df_LatDer = pd.read_excel("data/source_informes_LOCAL.xlsx", sheet_name="Lat Der")
+# df_LatIzq = pd.read_excel("data/source_informes_LOCAL.xlsx", sheet_name="Lat Izq")
+# df_Contencion = pd.read_excel("data/source_informes_LOCAL.xlsx", sheet_name="Contencion")
+# df_Mixto = pd.read_excel("data/source_informes_LOCAL.xlsx", sheet_name="Mixto")
+# df_Ofensivo = pd.read_excel("data/source_informes_LOCAL.xlsx", sheet_name="Ofensivo")
+# df_Extremo = pd.read_excel("data/source_informes_LOCAL.xlsx", sheet_name="Extremo")
+# df_Centrodelantero = pd.read_excel("data/source_informes_LOCAL.xlsx", sheet_name="Centrodelantero")
+
 
 # STREAMLIT
 config = cloudinary.config(cloud_name=st.secrets["CLOUDINARY_CLOUD_NAME"],
                             api_key=st.secrets["CLOUDINARY_API_KEY"],
                             api_secret=st.secrets["CLOUDINARY_SECRET_KEY"],
                             secure=True)
+
+df_Arquero = pd.read_excel("data/source_informes.xlsx", sheet_name="Arquero")
+df_Central = pd.read_excel("data/source_informes.xlsx", sheet_name="Central")
+df_LatDer = pd.read_excel("data/source_informes.xlsx", sheet_name="Lat Der")
+df_LatIzq = pd.read_excel("data/source_informes.xlsx", sheet_name="Lat Izq")
+df_Contencion = pd.read_excel("data/source_informes.xlsx", sheet_name="Contencion")
+df_Mixto = pd.read_excel("data/source_informes.xlsx", sheet_name="Mixto")
+df_Ofensivo = pd.read_excel("data/source_informes.xlsx", sheet_name="Ofensivo")
+df_Extremo = pd.read_excel("data/source_informes.xlsx", sheet_name="Extremo")
+df_Centrodelantero = pd.read_excel("data/source_informes.xlsx", sheet_name="Centrodelantero")
+
+
+
+# Concatenate DataFrames
+df = pd.concat([df_Central, df_Arquero,df_LatDer, df_LatIzq, df_Contencion,
+                          df_Mixto, df_Ofensivo, df_Extremo, df_Centrodelantero], ignore_index=True)
+
+
+# Optionally, replace NaN with None (pandas automatically uses NaN for missing values)
+df = df.where(pd.notnull(df), None)
+
+
 
 #Sidebar
 with st.sidebar:
@@ -112,36 +142,32 @@ if len(df) == 1:
 
     #Data
     Nombre_Jugador = df["Nombre Jugador"][0]
+    Club = df["Club"][0]
+    Nacionalidad = df["Nacionalidad"][0]
+    Fecha_Nacimiento = df["Fecha de Nacimiento"][0]
     Edad =  df["Edad"][0]
     Posicion = df["Posicion"][0]
-    Control =  df["Control"][0]
-    Tension_Pase =  df["Tension_Pase"][0]
-    Pase_Primera = df["Pase_Primera"][0]
-    Pase_Diagonal_Circulacion = df["Pase_Diagonal_Circulacion"][0]
-    Pase_Interior_Circulacion = df["Pase_Interior_Circulacion"][0]
-    Anticipo = df["Anticipo"][0]
-    Cobertura_Relevo = df["Cobertura_Relevo"][0]
-    Pierna = df["Pierna Habil"][0]
-    Cantidad_Videos = df["Cantidad_Videos"][0]
-    Nombre_Foto_Jugador = df["Nombre_Foto_Jugador"][0]
-    Nombre_Foto_Escudo = df["Nombre_Foto_Escudo"][0]
-    Nacionalidad = df["Nacionalidad"][0]
+    Posicion_Alternativa = df["Posicion Alternativa"][0]
+    Categoria = df["Categoria"][0]
+    Division = df["Division"][0]
     Seleccion = df["Seleccion"][0]
     Altura = df["Altura"][0]
     Peso = df["Peso"][0]
+    Pierna = df["Pierna Habil"][0]
     Vencimiento_Contrato = df["Vencimiento Contrato"][0]
     Sueldo = df["Sueldo"][0]
-    Representante = df["Representante"][0]
-    Club = df["Club"][0]
     Transfermarket = df["Transfermarket"][0]
-    Nombre_Foto_Carrera_Club = df["Nombre_Foto_Carrera_Club"][0]
-    Nombre_Foto_Carrera_Seleccion = df["Nombre_Foto_Carrera_Seleccion"][0]
-    Aspectos_Tecnicos = df["Aspectos_Tecnicos"][0]
-    Aspectos_Tacticos = df["Aspectos_Tacticos"][0]
-    Aspectos_Fisicos = df["Aspectos_Fisicos"][0]
+    Representante = df["Representante"][0]
+    Nombre_Foto_Escudo = df["Nombre Foto Escudo"][0]
+    Nombre_Foto_Jugador = df["Nombre Foto Jugador"][0]
+    Nombre_Foto_Carrera_Club = df["Nombre Foto Carrera Club"][0]
+    Nombre_Foto_Carrera_Seleccion = df["Nombre Foto Carrera Seleccion"][0]
+    Nombre_Video_Compacto = df["Nombre Video Compacto"][0]
+    Aspectos_Tecnicos_Tacticos = df["Aspectos Tecnicos Tacticos"][0]
+    Aspectos_Fisicos = df["Aspectos Fisicos"][0]
     Personalidad = df["Personalidad"][0]
-    Otras_Observaciones = df["Otras_Observaciones"][0]
-    Nombre_Video_Compacto = df["Nombre_Video_Compacto"][0]
+    Otras_Observaciones = df["Otras Observaciones"][0]
+    Cantidad_Videos = df["Cantidad Videos"][0]
 
 
     cols = st.columns((15,8,15), gap="small")
@@ -175,7 +201,7 @@ if len(df) == 1:
     # Grid de Informacion
     with cols[2]:
         n_cols = 2
-        n_rows = 9
+        n_rows = 10
         rows = [st.container() for _ in range(n_rows)]
         cols_per_row = [r.columns(n_cols) for r in rows]
         cols_grid = [column for row in cols_per_row for column in row]
@@ -264,6 +290,16 @@ if len(df) == 1:
                 st.markdown(Representante)
             else:
                 st.markdown("-")
+        
+        # Categoria
+        with cols_grid[18]:
+            st.markdown("<p><b>Categoría</b></p>", unsafe_allow_html=True)
+        with cols_grid[19]:
+            if not pd.isna(Categoria):
+                st.markdown(Categoria)
+            else:
+                st.markdown("-")    
+    
 
     
     # Carreras
@@ -296,55 +332,128 @@ if len(df) == 1:
                     # radius="max",
                     ))
 
-    # Radar
-    cols = st.columns((5,10,5), gap="small")
+    # ###################### Plot ######################
+
     
-    # Radar Volante Contencion
-    if Posicion == "Volante Contencion":
+    #  Arquero
+    if Posicion == "Arquero":
+            data = {
+            'Attribute': ["Tecnica Individual", "Atajadas", "Pelotas Aereas", "De Libero",
+               "Penales", "Circulacion", "Pase largo", "1 vs 1", "Posicionamiento Movilidad"],
+             'Value': [df["Tecnica Individual"][0], df["Atajadas"][0], 
+                   df["Pelotas Aereas"][0],
+                    df["De Libero"][0], df["Penales"][0], 
+                    df["Circulacion"][0], df["Pase largo"][0],
+                     df["1 vs 1"][0], df["Posicionamiento Movilidad"][0]]
+            }
+
+    # Central
+    elif Posicion == "Central":
+        with cols[1]:
+            data = {
+            'Attribute': ["Tecnica Individual", "Anticipacion", "Duelos por abajo", "Duelos Aereos",
+               "Salida", "Cierres-Coberturas", "Pase Paralelo", "1 vs 1", "Velocidad",
+                 "Resistencia", "Pelota Detenida"],
+             'Value': [df["Tecnica Individual"][0], df["Anticipacion"][0], 
+                   df["Duelos por abajo"][0],
+                    df["Duelos Aereos"][0], df["Salida"][0], 
+                    df["Cierres-Coberturas"][0], df["Pase Paralelo"][0],
+                     df["1 vs 1"][0], df["Velocidad"][0],
+                     df["Resistencia"][0], df["Pelota Detenida"][0]]
+                }
+    
+    elif Posicion == "Lateral Derecho":
+        with cols[1]:
+            data = {"Attribute": ["Tecnica Individual", "Anticipacion", "Duelos por abajo", 
+                                  "Duelos aereos", "Salida", "Cierres/coberturas", "Pasa Paralelo",
+                                  "1 vs 1 defensivo", "Velocidad", "Resistencia", "Centros",
+                                  "1 vs 1 ofensivo", "Remates", "Juego Ofensivo"],
+                    "Value": [df["Tecnica Individual"][0], df["Anticipacion"][0], df["Duelos por abajo"][0],
+                              df["Duelos aereos"][0], df["Salida"][0], df["Cierres/coberturas"][0],
+                              df["Pasa Paralelo"][0], df["1 vs 1 defensivo"][0], df["Velocidad"][0],
+                              df["Resistencia"][0], df["Centros"][0], df["1 vs 1 ofensivo"][0],
+                              df["Remates"][0], df["Juego Ofensivo"][0]]
+                    }
+
+
+    elif Posicion == "Lateral Izquierdo":
+        with cols[1]:
+            data = {"Attribute": ["Tecnica Individual", "Anticipacion", "Duelos por abajo",
+                                    "Duelos aereos", "Salida", "Cierres/coberturas", "Pasa Paralelo",
+                                    "1 vs 1 defensivo", "Velocidad", "Resistencia", "Centros",
+                                    "1 vs 1 ofensivo", "Remates", "Juego Ofensivo"],
+                        "Value": [df["Tecnica Individual"][0], df["Anticipacion"][0], df["Duelos por abajo"][0],
+                                df["Duelos aereos"][0], df["Salida"][0], df["Cierres/coberturas"][0],
+                                df["Pasa Paralelo"][0], df["1 vs 1 defensivo"][0], df["Velocidad"][0],
+                                df["Resistencia"][0], df["Centros"][0], df["1 vs 1 ofensivo"][0],
+                                df["Remates"][0], df["Juego Ofensivo"][0]]
+                        }
+    
+    elif Posicion == "Contencion":
+        with cols [1]:
+            data = {"Attribute": ["Tecnica Individual", "Cambio de frente", "Pase espacio - filtrado",
+                                    "Duelos aereos", "Salida - Circulacion", "Relevos/Vigilancias",
+                                    "Recuperaciones", "Duelos por abajo", "Velocidad", "Resistencia",
+                                    "Despliegue", "Coberturas/Cierres", "Remate"],
+                        "Value": [df["Tecnica Individual"][0], df["Cambio de frente"][0], df["Pase espacio - filtrado"][0],
+                                  df["Duelos aereos"][0], df["Salida - Circulacion"][0], df["Relevos/Vigilancias"][0],
+                                  df["Recuperaciones"][0], df["Duelos por abajo"][0], df["Velocidad"][0],
+                                  df["Resistencia"][0], df["Despliegue"][0], df["Coberturas/Cierres"][0],
+                                  df["Remate"][0]]}
+
+    
+    elif Posicion == "Mixto":
+        data = {"Attribute": ["Tecnica Individual", "Cambio de frente", "Pase espacio - filtrado",
+                              "Duelos aereos", "Salida - Circulacion", "Duelos defensivos",
+                              "Recuperaciones", "Duelos Ofensivos", "Velocidad", "Resistencia",
+                              "Despliegue", "Remate", "Regate", "Centros"],
+                "Value": [df["Tecnica Individual"][0], df["Cambio de frente"][0], df["Pase espacio - filtrado"][0],
+                          df["Duelos aereos"][0], df["Salida - Circulacion"][0], df["Duelos defensivos"][0],
+                          df["Recuperaciones"][0], df["Duelos Ofensivos"][0], df["Velocidad"][0],
+                          df["Resistencia"][0], df["Despliegue"][0], df["Remate"][0], df["Regate"][0],
+                          df["Centros"][0]]}
+
+   
+    elif Posicion == "Ofensivo":
+        data = {"Attribute": ["Tecnica Individual", "Cambio de frente", "Pase espacio - filtrado",
+                                "Asociaciones", "Regates", "Remates", "Retroceso Defensivo",
+                                "Explosividad", "Velocidad", "Resistencia", "Determinacion"],
+                "Value": [df["Tecnica Individual"][0], df["Cambio de frente"][0], df["Pase espacio - filtrado"][0],
+                            df["Asociaciones"][0], df["Regates"][0], df["Remates"][0], df["Retroceso Defensivo"][0],
+                            df["Explosividad"][0], df["Velocidad"][0], df["Resistencia"][0], df["Determinacion"][0]]}
         
-        with cols[1]:
-        #Plot
-            slice_colors = ["blue"] + ["green"]  + ["red"] *2
-            text_colors = ["white"]*4
-            names =  ["Control", "Tensión de pase", "Pase de primera", "Anticipo"]
-            percentiles = [Control,Tension_Pase,Pase_Primera, Anticipo]
-            size_radar = 3
-
-            radar = helpers.make_radar(names, percentiles, slice_colors, text_colors, size_radar)
-
-            st.pyplot(radar, use_container_width=False)
-
-    # Radar Volante Ofensivo
-    elif Posicion == "Volante Ofensivo":
-
-        with cols[1]:
+    elif Posicion == "Extremo":
+        data = {"Attribute": ["Tecnica Individual", "Asociaciones", "Centros", "Duelos aereos",
+                              "Regates", "Remates", "Retroceso Defensivo", "Explosividad",
+                              "Velocidad", "Resistencia", "Definicion/Peligrosidad"],
+                "Value": [df["Tecnica Individual"][0], df["Asociaciones"][0], df["Centros"][0],
+                          df["Duelos aereos"][0], df["Regates"][0], df["Remates"][0],
+                          df["Retroceso Defensivo"][0], df["Explosividad"][0], df["Velocidad"][0],
+                          df["Resistencia"][0], df["Definicion/Peligrosidad"][0]]}
+    
+    elif Posicion == "Centrodelantero":
+        data = {"Attribute": ["Tecnica Individual", "Juego de espaldas", "Duelos aereos", "Regates",
+                                "Remates", "Presion", "Movilidad/Desmarques", "Velocidad", "Resistencia",
+                                "Definicion/Peligrosidad", "Explosividad", "Remate cabeza"],
+                    "Value": [df["Tecnica Individual"][0], df["Juego de espaldas"][0], df["Duelos aereos"][0],
+                            df["Regates"][0], df["Remates"][0], df["Presion"][0], df["Movilidad/Desmarques"][0],
+                            df["Velocidad"][0], df["Resistencia"][0], df["Definicion/Peligrosidad"][0],
+                            df["Explosividad"][0], df["Remate cabeza"][0]]}
+            
+    st.markdown("#### Evaluación Técnica")    
+    cols = st.columns((5,20,5), gap="small")
+    with cols[1]:
+                fig = helpers.make_bar_plot(data)
+                st.pyplot(fig)
                 
-             #Plot
-            slice_colors = ["blue"]*5 + ["green"]*5 + ["red"]*5
-            text_colors = ["white"]*15
-            names =  ["Control", "Tensión de pase", "Pase Interior en Circulación", "Pase Diagonal en Circulación", "Cobertura de Relevo",
-                      "Control", "Tensión de pase", "Pase Interior en Circulación", "Pase Diagonal en Circulación", "Cobertura de Relevo",
-                      "Control", "Tensión de pase", "Pase Interior en Circulación", "Pase Diagonal en Circulación", "Cobertura de Relevo"]
-            percentiles = [Control,Tension_Pase, Pase_Interior_Circulacion, Pase_Diagonal_Circulacion, Cobertura_Relevo,
-                           Control,Tension_Pase, Pase_Interior_Circulacion, Pase_Diagonal_Circulacion, Cobertura_Relevo,
-                           Control,Tension_Pase, Pase_Interior_Circulacion, Pase_Diagonal_Circulacion, Cobertura_Relevo]
-            size_radar = 3
+    # ###################### Plot ######################
     
-            radar = helpers.make_radar(names, percentiles, slice_colors, text_colors,size_radar)
-    
-    
-            st.pyplot(radar, use_container_width=False) 
-
     
     # Aspectos Tecnicos
-    if not pd.isna(Aspectos_Tecnicos):
+    if not pd.isna(Aspectos_Tecnicos_Tacticos):
         st.markdown("#### Aspectos Técnicos")
-        st.markdown(Aspectos_Tecnicos)
+        st.markdown(Aspectos_Tecnicos_Tacticos)
 
-    # Aspectos Tacticos
-    if not pd.isna(Aspectos_Tacticos):
-        st.markdown("#### Aspectos Tácticos")
-        st.markdown(Aspectos_Tacticos)
     
     # Aspectos Fisicos
     if not pd.isna(Aspectos_Fisicos):
