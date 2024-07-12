@@ -23,7 +23,11 @@ st.set_page_config(
     initial_sidebar_state="expanded")
 alt.themes.enable("dark")
 
-df_entrenadores = pd.read_excel("data/source_informes.xlsx", sheet_name="Entrenadores")
+# # Load Data
+# df_entrenadores = pd.read_excel("data/source_informes.xlsx", sheet_name="Entrenadores")
+
+# Load Data LOCAL
+df_entrenadores = pd.read_excel("data/source_informes_LOCAL.xlsx", sheet_name="Entrenadores")
 
 # with st.sidebar:
 #     col = st.columns((1,5,1), gap='medium')

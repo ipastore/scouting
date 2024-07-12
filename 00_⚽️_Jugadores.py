@@ -24,19 +24,22 @@ st.set_page_config(
 alt.themes.enable("dark")
 #######################
 
-# Load data
-df = pd.read_excel("data/source_informes.xlsx", sheet_name="Jugadores")
+# Load data LOCAL
+df = pd.read_excel("data/source_informes_LOCAL.xlsx", sheet_name="Jugadores")
 
 
-##Init Cloudinary
-# # LOCAL
-# config = cloudinary.config(secure=True)
+#Init Cloudinary
+# LOCAL
+config = cloudinary.config(secure=True)
 
-# STREAMLIT
-config = cloudinary.config(cloud_name=st.secrets["CLOUDINARY_CLOUD_NAME"],
-                            api_key=st.secrets["CLOUDINARY_API_KEY"],
-                            api_secret=st.secrets["CLOUDINARY_SECRET_KEY"],
-                            secure=True)
+# # Load data
+# df = pd.read_excel("data/source_informes.xlsx", sheet_name="Jugadores")
+
+# # STREAMLIT
+# config = cloudinary.config(cloud_name=st.secrets["CLOUDINARY_CLOUD_NAME"],
+#                             api_key=st.secrets["CLOUDINARY_API_KEY"],
+#                             api_secret=st.secrets["CLOUDINARY_SECRET_KEY"],
+#                             secure=True)
 
 #Sidebar
 with st.sidebar:
@@ -359,7 +362,7 @@ if len(df) == 1:
         st.markdown(Otras_Observaciones)	
 
     # Video Compacto
-    if not pd.isna(Otras_Observaciones):
+    if not pd.isna(Nombre_Video_Compacto):
         st.markdown("#### Video Compacto")
         st.video(Nombre_Video_Compacto)
   
