@@ -100,13 +100,14 @@ filter_jugadores =  {
     "Pierna Habil": None,
     "Division": None,
     "Categoria": None,
-    "Vencimiento Contrato": None,
+   # "Vencimiento Contrato": None,
     "Nombre Jugador": None,
 }
 
 #Dynamic Filters
 filter_jugadores_name = ["Posicion", "Pierna Habil", 
-                         "Division", "Categoria", "Vencimiento Contrato", 
+                         "Division", "Categoria", 
+                         #"Vencimiento Contrato", 
                          "Nombre Jugador"]
 
 dynamic_filters_jugadores = DynamicFilters(df, filter_jugadores)
