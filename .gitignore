@@ -6,4 +6,5 @@
 .pytest_cache
 **/__pycache__
 ~$output.xlsx
-.streamlit/secrets.toml
+secrets.toml
+settings.json

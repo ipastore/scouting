@@ -19,6 +19,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, Table, MetaData, select
 from sqlalchemy.exc import SQLAlchemyError
 import datetime
+import uuid
 
 
 
@@ -92,6 +93,13 @@ representante = Table('representante', metadata, autoload_with=engine)
 
 # Cargar datos de tablas relacionadas
 
+# Convert UUID columns to strings in the DataFrame
+def convert_uuid_to_str(df):
+    for col in df.columns:
+        if df[col].dtype == 'object':
+            df[col] = df[col].apply(lambda x: str(x) if isinstance(x, uuid.UUID) else x)
+    return df
+
 ## GETS
 def get_all_jugadores():
     query = select(jugador.c.jugador_uid, jugador.c.nombre, jugador.c.nacionalidad, 
@@ -102,17 +110,20 @@ def get_all_jugadores():
                      jugador.c.foto_carrera_seleccion, jugador.c.aspectos_tecnicos_tacticos, jugador.c.aspectos_fisicos,
                        jugador.c.personalidad, jugador.c.otras_observaciones, jugador.c.representante_uid)
     result = session.execute(query)
-    return pd.DataFrame(result.fetchall(), columns=result.keys())
+    df = pd.DataFrame(result.fetchall(), columns=result.keys())
+    return convert_uuid_to_str(df)
 
 def get_all_representantes():
     query = select(representante.c.representante_uid, representante.c.nombre)
     result = session.execute(query)
-    return pd.DataFrame(result.fetchall(), columns=result.keys())
+    df = pd.DataFrame(result.fetchall(), columns=result.keys())
+    return convert_uuid_to_str(df)
 
 def get_all_clubs():
     query = select(club.c.club_uid, club.c.nombre, club.c.foto_escudo, club.c.foto_plantel)
     result = session.execute(query)
-    return pd.DataFrame(result.fetchall(), columns=result.keys())
+    df = pd.DataFrame(result.fetchall(), columns=result.keys())
+    return convert_uuid_to_str(df)
 
 def get_all_entrenadores():
     query = select(entrenador.c.entrenador_uid, entrenador.c.nombre, entrenador.c.nacionalidad, entrenador.c.fecha_nacimiento, 
@@ -121,28 +132,41 @@ def get_all_entrenadores():
                     entrenador.c.transiciones, entrenador.c.otras_observaciones, entrenador.c.ultimos_partidos, 
                     entrenador.c.foto_ultimos_partidos1, entrenador.c.foto_ultimos_partidos2)
     result = session.execute(query)
-    return pd.DataFrame(result.fetchall(), columns=result.keys())
+    df = pd.DataFrame(result.fetchall(), columns=result.keys())
+    return convert_uuid_to_str(df)
 
 def get_all_videos():
     query = select(videos.c.video_uid, videos.c.url, videos.c.titulo, videos.c.descripcion)
     result = session.execute(query)
-    return pd.DataFrame(result.fetchall(), columns=result.keys())
+    df = pd.DataFrame(result.fetchall(), columns=result.keys())
+    return convert_uuid_to_str(df)
 
 
-def get_all_clubs():
-    query = select(club.c.club_uid, club.c.nombre, club.c.foto_escudo, club.c.foto_plantel)
-    result = session.execute(query)
-    return pd.DataFrame(result.fetchall(), columns=result.keys())
+## CHECKS de existencia
+def jugador_exists_representante(nombre, representante_uid):
+    query = select(jugador).where(jugador.c.nombre == nombre, jugador.c.representante_uid == representante_uid)
+    result = session.execute(query).fetchone()
+    return result is not None
 
-def get_all_videos():
-    query = select(videos.c.video_uid, videos.c.url, videos.c.titulo, videos.c.descripcion)
-    result = session.execute(query)
-    return pd.DataFrame(result.fetchall(), columns=result.keys())
+def jugador_exists(nombre):
+    query = select(jugador).where(jugador.c.nombre == nombre)
+    result = session.execute(query).fetchone()
+    return result is not None
 
-def get_all_entrenadores():
-    query = select(entrenador.c.entrenador_uid, entrenador.c.nombre, entrenador.c.nacionalidad, entrenador.c.fecha_nacimiento, entrenador.c.esquema_predilecto, entrenador.c.foto_entrenador, entrenador.c.foto_carrera_entrenador, entrenador.c.foto_carrera_como_jugador, entrenador.c.fase_ofensiva, entrenador.c.fase_defensiva, entrenador.c.transiciones, entrenador.c.otras_observaciones, entrenador.c.ultimos_partidos, entrenador.c.foto_ultimos_partidos1, entrenador.c.foto_ultimos_partidos2)
-    result = session.execute(query)
-    return pd.DataFrame(result.fetchall(), columns=result.keys())
+def club_exists(nombre):
+    query = select([club]).where(club.c.nombre == nombre)
+    result = session.execute(query).fetchone()
+    return result is not None
+
+def entrenador_exists(nombre):
+    query = select([entrenador]).where(entrenador.c.nombre == nombre)
+    result = session.execute(query).fetchone()
+    return result is not None
+
+def representante_exists(nombre):
+    query = select([representante]).where(representante.c.nombre == nombre)
+    result = session.execute(query).fetchone()
+    return result is not None
 
 ## ADDS
 def add_jugador(data):
@@ -167,16 +191,22 @@ def update_jugador(player_id, data):
         session.rollback()
         st.error(f'Error al actualizar jugador: {e}')
 
-## DELETES
-def delete_player(player_id):
-    delete_stmt = jugador.delete().where(jugador.c.jugador_uid == player_id)
-    try:
-        session.execute(delete_stmt)
-        session.commit()
-        st.success('Jugador eliminado exitosamente')
-    except SQLAlchemyError as e:
-        session.rollback()
-        st.error(f'Error al eliminar jugador: {e}')
+# ## DELETES ACA ME QUEDE
+# def delete_player(player_id):
+#     delete_stmt = jugador.delete().where(jugador.c.jugador_uid == player_id)
+#     try:
+#         session.execute(delete_stmt)
+#         session.commit()
+#         st.success('Jugador eliminado exitosamente')
+#     except SQLAlchemyError as e:
+#         session.rollback()
+#         st.error(f'Error al eliminar jugador: {e}')
+
+# def delete_jugador(jugador_uid):
+#     with engine.connect() as connection:
+#         with connection.begin():
+#             connection.execute(jugador.delete().where(jugador.c.jugador_uid == jugador_uid))
+#         st.success('Jugador eliminado con éxito!')
 
 # Obtener datos para listas desplegables
 df_representantes = get_all_representantes()
@@ -234,29 +264,92 @@ with st.form('Agregar Jugador'):
 
     submit_button = st.form_submit_button('Agregar')
 
+    # if submit_button:
+    #     add_jugador_data = {
+    #         'nombre': nombre,
+    #         'nacionalidad': nacionalidad if nacionalidad != '' else None,
+    #         'fecha_nacimiento': fecha_nacimiento,
+    #         'posicion': posicion,
+    #         'posicion_alternativa': posicion_alternativa if posicion_alternativa != '' else None,
+    #         'categoria': categoria,
+    #         'division': division if division != '' else None,
+    #         'seleccion': seleccion if seleccion != '' else None,
+    #         'altura': altura,
+    #         'peso': peso,
+    #         'pierna_habil': pierna_habil if pierna_habil != '' else None,
+    #         'vencimiento_contrato': vencimiento_contrato,
+    #         'sueldo': sueldo,
+    #         'valor_transfermarket': valor_transfermarket,
+    #         'foto_jugador': foto_jugador,
+    #         'foto_carrera_club': foto_carrera_club,
+    #         'foto_carrera_seleccion': foto_carrera_seleccion,
+    #         'aspectos_tecnicos_tacticos': aspectos_tecnicos_tacticos,
+    #         'aspectos_fisicos': aspectos_fisicos,
+    #         'personalidad': personalidad,
+    #         'otras_observaciones': otras_observaciones,
+    #         'representante_uid': representante_uid
+    #     }
+    #     add_jugador(add_jugador_data)
+
     if submit_button:
-        add_jugador_data = {
-            'nombre': nombre,
-            'nacionalidad': nacionalidad if nacionalidad != '' else None,
-            'fecha_nacimiento': fecha_nacimiento,
-            'posicion': posicion,
-            'posicion_alternativa': posicion_alternativa if posicion_alternativa != '' else None,
-            'categoria': categoria,
-            'division': division if division != '' else None,
-            'seleccion': seleccion if seleccion != '' else None,
-            'altura': altura,
-            'peso': peso,
-            'pierna_habil': pierna_habil if pierna_habil != '' else None,
-            'vencimiento_contrato': vencimiento_contrato,
-            'sueldo': sueldo,
-            'valor_transfermarket': valor_transfermarket,
-            'foto_jugador': foto_jugador,
-            'foto_carrera_club': foto_carrera_club,
-            'foto_carrera_seleccion': foto_carrera_seleccion,
-            'aspectos_tecnicos_tacticos': aspectos_tecnicos_tacticos,
-            'aspectos_fisicos': aspectos_fisicos,
-            'personalidad': personalidad,
-            'otras_observaciones': otras_observaciones,
-            'representante_uid': representante_uid
-        }
-        add_jugador(add_jugador_data)
+            warning = False
+            if jugador_exists_representante(nombre, representante_uid):
+                st.error('''El jugador con el mismo nombre y representante ya existe. 
+                        Esto es altamente improbable, si quiere agregar un jugador con el
+                          mismo nombre de jugador y representante, ponganse en contacto con el 
+                         equipo de Headers'''
+                         )
+            if jugador_exists(nombre):
+                st.warning('El jugador con el mismo nombre ya existe')
+                warning = True
+                if warning and st.checkbox('Confirmar adición del jugador a pesar de la advertencia'):
+                    add_jugador_data = {
+                        'nombre': nombre,
+                        'nacionalidad': nacionalidad if nacionalidad != '' else None,
+                        'fecha_nacimiento': fecha_nacimiento,
+                        'posicion': posicion,
+                        'posicion_alternativa': posicion_alternativa if posicion_alternativa != '' else None,
+                        'categoria': categoria,
+                        'division': division if division != '' else None,
+                        'seleccion': seleccion if seleccion != '' else None,
+                        'altura': altura,
+                        'peso': peso,
+                        'pierna_habil': pierna_habil if pierna_habil != '' else None,
+                        'vencimiento_contrato': vencimiento_contrato,
+                        'sueldo': sueldo,
+                        'valor_transfermarket': valor_transfermarket,
+                        'foto_jugador': foto_jugador,
+                        'foto_carrera_club': foto_carrera_club,
+                        'foto_carrera_seleccion': foto_carrera_seleccion,
+                        'aspectos_tecnicos_tacticos': aspectos_tecnicos_tacticos,
+                        'aspectos_fisicos': aspectos_fisicos,
+                        'personalidad': personalidad,
+                        'otras_observaciones': otras_observaciones,
+                        'representante_uid': representante_uid
+                    }
+            add_jugador_data = {
+                'nombre': nombre,
+                'nacionalidad': nacionalidad if nacionalidad != '' else None,
+                'fecha_nacimiento': fecha_nacimiento,
+                'posicion': posicion,
+                'posicion_alternativa': posicion_alternativa if posicion_alternativa != '' else None,
+                'categoria': categoria,
+                'division': division if division != '' else None,
+                'seleccion': seleccion if seleccion != '' else None,
+                'altura': altura,
+                'peso': peso,
+                'pierna_habil': pierna_habil if pierna_habil != '' else None,
+                'vencimiento_contrato': vencimiento_contrato,
+                'sueldo': sueldo,
+                'valor_transfermarket': valor_transfermarket,
+                'foto_jugador': foto_jugador,
+                'foto_carrera_club': foto_carrera_club,
+                'foto_carrera_seleccion': foto_carrera_seleccion,
+                'aspectos_tecnicos_tacticos': aspectos_tecnicos_tacticos,
+                'aspectos_fisicos': aspectos_fisicos,
+                'personalidad': personalidad,
+                'otras_observaciones': otras_observaciones,
+                'representante_uid': representante_uid
+                }
+            add_jugador(add_jugador_data)
+            st.success('Jugador agregado con éxito!')
