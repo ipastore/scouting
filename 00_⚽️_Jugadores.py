@@ -78,23 +78,22 @@ with st.sidebar:
         st.markdown("### Headers Scouting")
 
 
-###Init Transfermarket
-if "Filtro_Transfermarket" not in st.session_state:
-    st.session_state["Filtro_Transfermarket"] = (0,100)
+# ###Init Transfermarket COMENTO TODO EL FILTRO PORQUE NO SE AGREGARON DATOS
+# if "Filtro_Transfermarket" not in st.session_state:
+#     st.session_state["Filtro_Transfermarket"] = (0,100)
 
-# Ensure the 'Transfermarket' column is numeric
-df['Transfermarket'] = pd.to_numeric(df['Transfermarket'], errors='coerce')
+# # Ensure the 'Transfermarket' column is numeric
+# df['Transfermarket'] = pd.to_numeric(df['Transfermarket'], errors='coerce')
 
-st.write(df['Transfermarket'])
+# st.write(df['Transfermarket'])
 
-with st.sidebar:
-    _min = float(df["Transfermarket"].min())
-    _max = float(df["Transfermarket"].max())
-    step = (_max - _min) / 100
-    Filtro_Transfermarket = st.slider( "Valor de Mercado", _min, _max,step=step, key="Filtro_Transfermarket")
+# with st.sidebar:
+#     _min = float(df["Transfermarket"].min())
+#     _max = float(df["Transfermarket"].max())
+#     step = (_max - _min) / 100
+#     Filtro_Transfermarket = st.slider( "Valor de Mercado", _min, _max,step=step, key="Filtro_Transfermarket")
+# df = df[df["Transfermarket"].between(*st.session_state.Filtro_Transfermarket)].reset_index()
 
-
-df = df[df["Transfermarket"].between(*st.session_state.Filtro_Transfermarket)].reset_index()
 #Filters
 filter_jugadores =  {
     "Posicion": None,
