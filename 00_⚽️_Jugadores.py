@@ -74,31 +74,16 @@ df = df.where(pd.notnull(df), None)
 #Sidebar
 with st.sidebar:
     col = st.columns((1,5,1), gap='medium')
-
     with col[1]:
-        Nombre_Escudo = "sanlorenzoescudo"
-        path_Foto = f"data/fotos/escudos/{Nombre_Escudo}"
-        st.image(CloudinaryImage(public_id = path_Foto).build_url(
-                    # aspect_ratio = "1.0",
-                    # width = 300,
-                    # gravity="faces",
-                    # crop="fill",
-                    # radius="max",
-                    ))
-
-    
-    col = st.columns((5,50,5), gap='medium')
-
-    with col[1]:
-       st.markdown("# San Lorenzo")
-    
-    st.markdown("### Scouting")
+        st.markdown("### Headers Scouting")
 
 
 ###Init Transfermarket
 if "Filtro_Transfermarket" not in st.session_state:
     st.session_state["Filtro_Transfermarket"] = (0,100)
 
+# Ensure the 'Transfermarket' column is numeric
+df['Transfermarket'] = pd.to_numeric(df['Transfermarket'], errors='coerce')
 
 with st.sidebar:
     _min = float(df["Transfermarket"].min())
