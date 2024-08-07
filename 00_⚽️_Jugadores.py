@@ -85,6 +85,8 @@ if "Filtro_Transfermarket" not in st.session_state:
 # Ensure the 'Transfermarket' column is numeric
 df['Transfermarket'] = pd.to_numeric(df['Transfermarket'], errors='coerce')
 
+st.write(df['Transfermarket'])
+
 with st.sidebar:
     _min = float(df["Transfermarket"].min())
     _max = float(df["Transfermarket"].max())
