@@ -27,7 +27,7 @@ import uuid
 #######################
 # Page configuration
 st.set_page_config(
-    page_title="Scouting SL",
+    page_title="Headers DataBase",
     page_icon="⚽",
     layout="wide",
     initial_sidebar_state="expanded")
@@ -43,23 +43,8 @@ config = cloudinary.config(secure=True)
 #Sidebar
 with st.sidebar:
     col = st.columns((1,5,1), gap='medium')
-
     with col[1]:
-        Nombre_Escudo = "sanlorenzoescudo"
-        path_Foto = f"data/fotos/escudos/{Nombre_Escudo}"
-        st.image(CloudinaryImage(public_id = path_Foto).build_url(
-                    # aspect_ratio = "1.0",
-                    # width = 300,
-                    # gravity="faces",
-                    # crop="fill",
-                    # radius="max",
-                    ))
-    col = st.columns((5,50,5), gap='medium')
-
-    with col[1]:
-       st.markdown("# San Lorenzo")
-    
-    st.markdown("### Scouting")
+       st.markdown("### Headers DataBase")
 
 
 # Cargar variables de entorno
@@ -292,64 +277,65 @@ with st.form('Agregar Jugador'):
     #     add_jugador(add_jugador_data)
 
     if submit_button:
-            warning = False
-            if jugador_exists_representante(nombre, representante_uid):
-                st.error('''El jugador con el mismo nombre y representante ya existe. 
-                        Esto es altamente improbable, si quiere agregar un jugador con el
-                          mismo nombre de jugador y representante, ponganse en contacto con el 
-                         equipo de Headers'''
-                         )
-            if jugador_exists(nombre):
-                st.warning('El jugador con el mismo nombre ya existe')
-                warning = True
-                if warning and st.checkbox('Confirmar adición del jugador a pesar de la advertencia'):
-                    add_jugador_data = {
-                        'nombre': nombre,
-                        'nacionalidad': nacionalidad if nacionalidad != '' else None,
-                        'fecha_nacimiento': fecha_nacimiento,
-                        'posicion': posicion,
-                        'posicion_alternativa': posicion_alternativa if posicion_alternativa != '' else None,
-                        'categoria': categoria,
-                        'division': division if division != '' else None,
-                        'seleccion': seleccion if seleccion != '' else None,
-                        'altura': altura,
-                        'peso': peso,
-                        'pierna_habil': pierna_habil if pierna_habil != '' else None,
-                        'vencimiento_contrato': vencimiento_contrato,
-                        'sueldo': sueldo,
-                        'valor_transfermarket': valor_transfermarket,
-                        'foto_jugador': foto_jugador,
-                        'foto_carrera_club': foto_carrera_club,
-                        'foto_carrera_seleccion': foto_carrera_seleccion,
-                        'aspectos_tecnicos_tacticos': aspectos_tecnicos_tacticos,
-                        'aspectos_fisicos': aspectos_fisicos,
-                        'personalidad': personalidad,
-                        'otras_observaciones': otras_observaciones,
-                        'representante_uid': representante_uid
+        warning = False
+        if jugador_exists_representante(nombre, representante_uid):
+            st.error('''El jugador con el mismo nombre y representante ya existe. 
+                    Esto es altamente improbable, si quiere agregar un jugador con el
+                      mismo nombre de jugador y representante, ponganse en contacto con el 
+                     equipo de Headers'''
+                     )
+        elif jugador_exists(nombre):
+            st.warning('El jugador con el mismo nombre ya existe')
+            warning = True
+            if warning and st.checkbox('Confirmar adición del jugador a pesar de la advertencia'):
+                add_jugador_data = {
+                    'nombre': nombre,
+                    'nacionalidad': nacionalidad if nacionalidad != '' else None,
+                    'fecha_nacimiento': fecha_nacimiento,
+                    'posicion': posicion,
+                    'posicion_alternativa': posicion_alternativa if posicion_alternativa != '' else None,
+                    'categoria': categoria,
+                    'division': division if division != '' else None,
+                    'seleccion': seleccion if seleccion != '' else None,
+                    'altura': altura,
+                    'peso': peso,
+                    'pierna_habil': pierna_habil if pierna_habil != '' else None,
+                    'vencimiento_contrato': vencimiento_contrato,
+                    'sueldo': sueldo,
+                    'valor_transfermarket': valor_transfermarket,
+                    'foto_jugador': foto_jugador,
+                    'foto_carrera_club': foto_carrera_club,
+                    'foto_carrera_seleccion': foto_carrera_seleccion,
+                    'aspectos_tecnicos_tacticos': aspectos_tecnicos_tacticos,
+                    'aspectos_fisicos': aspectos_fisicos,
+                    'personalidad': personalidad,
+                    'otras_observaciones': otras_observaciones,
+                    'representante_uid': representante_uid
                     }
+                add_jugador(add_jugador_data)                
+        elif not warning: 
             add_jugador_data = {
-                'nombre': nombre,
-                'nacionalidad': nacionalidad if nacionalidad != '' else None,
-                'fecha_nacimiento': fecha_nacimiento,
-                'posicion': posicion,
-                'posicion_alternativa': posicion_alternativa if posicion_alternativa != '' else None,
-                'categoria': categoria,
-                'division': division if division != '' else None,
-                'seleccion': seleccion if seleccion != '' else None,
-                'altura': altura,
-                'peso': peso,
-                'pierna_habil': pierna_habil if pierna_habil != '' else None,
-                'vencimiento_contrato': vencimiento_contrato,
-                'sueldo': sueldo,
-                'valor_transfermarket': valor_transfermarket,
-                'foto_jugador': foto_jugador,
-                'foto_carrera_club': foto_carrera_club,
-                'foto_carrera_seleccion': foto_carrera_seleccion,
-                'aspectos_tecnicos_tacticos': aspectos_tecnicos_tacticos,
-                'aspectos_fisicos': aspectos_fisicos,
-                'personalidad': personalidad,
-                'otras_observaciones': otras_observaciones,
-                'representante_uid': representante_uid
-                }
+            'nombre': nombre,
+            'nacionalidad': nacionalidad if nacionalidad != '' else None,
+            'fecha_nacimiento': fecha_nacimiento,
+            'posicion': posicion,
+            'posicion_alternativa': posicion_alternativa if posicion_alternativa != '' else None,
+            'categoria': categoria,
+            'division': division if division != '' else None,
+            'seleccion': seleccion if seleccion != '' else None,
+            'altura': altura,
+            'peso': peso,
+            'pierna_habil': pierna_habil if pierna_habil != '' else None,
+            'vencimiento_contrato': vencimiento_contrato,
+            'sueldo': sueldo,
+            'valor_transfermarket': valor_transfermarket,
+            'foto_jugador': foto_jugador,
+            'foto_carrera_club': foto_carrera_club,
+            'foto_carrera_seleccion': foto_carrera_seleccion,
+            'aspectos_tecnicos_tacticos': aspectos_tecnicos_tacticos,
+            'aspectos_fisicos': aspectos_fisicos,
+            'personalidad': personalidad,
+            'otras_observaciones': otras_observaciones,
+            'representante_uid': representante_uid
+            }                       
             add_jugador(add_jugador_data)
-            st.success('Jugador agregado con éxito!')
