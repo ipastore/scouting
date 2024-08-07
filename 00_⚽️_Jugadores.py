@@ -18,7 +18,7 @@ import seaborn as sns
 #######################
 # Page configuration
 st.set_page_config(
-    page_title="Scouting SL",
+    page_title="Headers Scouting",
     page_icon="⚽",
     layout="wide",
     initial_sidebar_state="expanded")
@@ -335,7 +335,7 @@ if len(df) == 1:
             }
 
     # Central
-    elif Posicion == "Central":
+    elif Posicion == "Defensor Central":
         with cols[1]:
             data = {
             'Attribute': ["Tecnica Individual", "Anticipacion", "Duelos por abajo", "Duelos Aereos",
@@ -389,7 +389,7 @@ if len(df) == 1:
                                   df["Remate"][0]]}
 
     
-    elif Posicion == "Mixto":
+    elif Posicion == "Volante Mixto":
         data = {"Attribute": ["Tecnica Individual", "Cambio de frente", "Pase espacio - filtrado",
                               "Duelos aereos", "Salida - Circulacion", "Duelos defensivos",
                               "Recuperaciones", "Duelos Ofensivos", "Velocidad", "Resistencia",
@@ -401,7 +401,7 @@ if len(df) == 1:
                           df["Centros"][0]]}
 
    
-    elif Posicion == "Ofensivo":
+    elif Posicion == "Volante Ofensivo":
         data = {"Attribute": ["Tecnica Individual", "Cambio de frente", "Pase espacio - filtrado",
                                 "Asociaciones", "Regates", "Remates", "Retroceso Defensivo",
                                 "Explosividad", "Velocidad", "Resistencia", "Determinacion"],
