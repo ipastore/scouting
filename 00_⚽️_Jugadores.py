@@ -102,13 +102,15 @@ filter_jugadores =  {
     "Categoria": None,
    # "Vencimiento Contrato": None,
     "Nombre Jugador": None,
+    "Club": None,
 }
 
 #Dynamic Filters
 filter_jugadores_name = ["Posicion", "Pierna Habil", 
                          "Division", "Categoria", 
                          #"Vencimiento Contrato", 
-                         "Nombre Jugador"]
+                         "Nombre Jugador",
+                         "Club"]
 
 dynamic_filters_jugadores = DynamicFilters(df, filter_jugadores)
 dynamic_filters_jugadores.display_filters(location='sidebar')
@@ -121,7 +123,7 @@ with st.sidebar:
 
 #Rendering without filter
 if len(df) > 1:
-    st.write(df[["Nombre Jugador", "Posicion", "Pierna Habil", "Transfermarket"]])
+    st.write(df[["Nombre Jugador", "Posicion", "Pierna Habil", "Club"]])
 
 
 #Rendering with filter
@@ -393,11 +395,11 @@ if len(df) == 1:
         data = {"Attribute": ["Tecnica Individual", "Cambio de frente", "Pase espacio - filtrado",
                               "Duelos aereos", "Salida - Circulacion", "Duelos defensivos",
                               "Recuperaciones", "Duelos Ofensivos", "Velocidad", "Resistencia",
-                              "Despliegue", "Remate", "Regate", "Centros"],
+                              "Despliegue", "Remate", "Regates", "Centros"],
                 "Value": [df["Tecnica Individual"][0], df["Cambio de frente"][0], df["Pase espacio - filtrado"][0],
                           df["Duelos aereos"][0], df["Salida - Circulacion"][0], df["Duelos defensivos"][0],
                           df["Recuperaciones"][0], df["Duelos Ofensivos"][0], df["Velocidad"][0],
-                          df["Resistencia"][0], df["Despliegue"][0], df["Remate"][0], df["Regate"][0],
+                          df["Resistencia"][0], df["Despliegue"][0], df["Remate"][0], df["Regates"][0],
                           df["Centros"][0]]}
 
    
