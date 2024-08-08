@@ -72,7 +72,8 @@ club = Table('club', metadata, autoload_with=engine)
 videos = Table('videos', metadata, autoload_with=engine)
 entrenador = Table('entrenador', metadata, autoload_with=engine)
 tiene_video = Table('tiene_video', metadata, autoload_with=engine)
-pertenece = Table('pertenece', metadata, autoload_with=engine)
+club_jugador = Table('club_jugador', metadata, autoload_with=engine)
+club_entrenador = Table('club_entrenador', metadata, autoload_with=engine)
 representante = Table('representante', metadata, autoload_with=engine)
 
 
@@ -126,11 +127,19 @@ def get_all_videos():
     df = pd.DataFrame(result.fetchall(), columns=result.keys())
     return convert_uuid_to_str(df)
 
-def get_all_pertenece():
-    query = select(pertenece.c.jugador_uid, pertenece.c.club_uid, pertenece.c.entrenador_uid)
+
+def get_all_club_jugador():
+    query = select(club_jugador.c.jugador_uid, club_jugador.c.club_uid)
     result = session.execute(query)
     df = pd.DataFrame(result.fetchall(), columns=result.keys())
     return convert_uuid_to_str(df)
+
+def get_all_club_entrenador():
+    query = select(club_entrenador.c.entrenador_uid, club_entrenador.c.club_uid)
+    result = session.execute(query)
+    df = pd.DataFrame(result.fetchall(), columns=result.keys())
+    return convert_uuid_to_str(df)
+
 
 def get_all_tiene_video():
     query = select(tiene_video.c.jugador_uid, tiene_video.c.video_uid, tiene_video.c.entrenador_uid)
@@ -140,7 +149,7 @@ def get_all_tiene_video():
 
 
 ## CHECKS de existencia
-def jugador_exists_representante(nombre, representante_uid):
+def jugador_representante_exists(nombre, representante_uid):
     query = select(jugador).where(jugador.c.nombre == nombre, jugador.c.representante_uid == representante_uid)
     result = session.execute(query).fetchone()
     return result is not None
@@ -167,6 +176,21 @@ def representante_exists(nombre):
 
 def video_exists(url):
     query = select(videos).where(videos.c.url == url)
+    result = session.execute(query).fetchone()
+    return result is not None
+
+def club_entrenador_exists(club_uid):
+    query = select(club_entrenador).where(club_entrenador.c.club_uid == club_uid)
+    result = session.execute(query).fetchone()
+    return result is not None
+
+def club_jugador_exists(club_uid):
+    query = select(club_jugador).where(club_jugador.c.club_uid == club_uid)
+    result = session.execute(query).fetchone()
+    return result is not None
+
+def tiene_video_exists(jugador_uid, video_uid):
+    query = select(tiene_video).where(tiene_video.c.jugador_uid == jugador_uid, tiene_video.c.video_uid == video_uid)
     result = session.execute(query).fetchone()
     return result is not None
 
@@ -231,15 +255,26 @@ def add_tiene_video(data):
         session.rollback()
         st.error(f'Error al agregar relación entre jugador y video: {e}')
 
-def add_pertenece(data):
-    insert_stmt = pertenece.insert().values(data)
+
+def add_club_entrenador(data):
+    insert_stmt = club_entrenador.insert().values(data)
     try:
         session.execute(insert_stmt)
         session.commit()
-        st.success('Relación entre jugador y club agregada exitosamente')
+        st.success('Relación entre club y entrenador agregada exitosamente')
     except SQLAlchemyError as e:
         session.rollback()
-        st.error(f'Error al agregar relación entre jugador y club: {e}')
+        st.error(f'Error al agregar relación entre club y entrenador: {e}')
+
+def add_club_jugador(data):
+    insert_stmt = club_jugador.insert().values(data)
+    try:
+        session.execute(insert_stmt)
+        session.commit()
+        st.success('Relación entre club y jugador agregada exitosamente')
+    except SQLAlchemyError as e:
+        session.rollback()
+        st.error(f'Error al agregar relación entre club y jugador: {e}')
 
 
 ## UPDATES
@@ -259,8 +294,9 @@ df_clubs = get_all_clubs()
 df_videos = get_all_videos()
 df_entrenadores = get_all_entrenadores()
 df_jugadores = get_all_jugadores()
-df_pertenece = get_all_pertenece()
 df_tiene_video = get_all_tiene_video()
+df_club_jugador = get_all_club_jugador()
+df_club_entrenador = get_all_club_entrenador()
 
 # Mostrar datos de ejemplo
 st.write('Representantes:', df_representantes)
@@ -268,8 +304,9 @@ st.write('Clubs:', df_clubs)
 st.write('Videos:', df_videos)
 st.write('Entrenadores:', df_entrenadores)
 st.write('Jugadores:', df_jugadores)
-st.write('Pertenece:', df_pertenece)
 st.write('Tiene Video:', df_tiene_video)
+df_club_jugador = get_all_club_jugador()
+st.write('Club_entrenador:', df_club_entrenador)
 
 
 
@@ -286,7 +323,12 @@ max_date_vencimiento_contrato = datetime.date(2100, 1, 1)
 with st.form('Agregar Jugador'):
 
     #NOT NULL
-    nombre = st.text_input('Nombre') 
+    nombre = st.text_input('Nombre')
+    club_nombre = st.selectbox('Club',[''] + df_clubs['nombre'].tolist())
+    if club_nombre == '':
+        club_uid = None
+    else:
+        club_uid = df_clubs[df_clubs['nombre'] == club_nombre]['club_uid'].values[0] 
     nacionalidad = st.selectbox('Nacionalidad', ['','Argentina', 'Brasil', 'Uruguay', 'Chile', 'Paraguay', 'Bolivia', 'Perú', 'Colombia', 'Venezuela', 'Ecuador'])
     fecha_nacimiento = st.date_input('Fecha de Nacimiento', min_value=min_date_nacimiento, max_value=max_date_nacimiento, value=None)
     #NOT NULL
@@ -314,15 +356,14 @@ with st.form('Agregar Jugador'):
         representante_uid = None
     else:
         representante_uid = df_representantes[df_representantes['nombre'] == representante_nombre]['representante_uid'].values[0]
-    club_nombre = st.selectbox('Club', df_clubs['nombre'].tolist())
-    club_uid = df_clubs[df_clubs['nombre'] == club_nombre]['club_uid'].values[0]
-    entrenador_uid = df_pertenece[df_pertenece['club_uid'] == club_uid]['entrenador_uid'].values[0]
+
+    
 
     submit_jugador_button = st.form_submit_button('Agregar Jugador')
 
     if submit_jugador_button:
         warning = False
-        if jugador_exists_representante(nombre, representante_uid):
+        if jugador_representante_exists(nombre, representante_uid):
             st.error('''El jugador con el mismo nombre y representante ya existe. 
                     Esto es altamente improbable, si quiere agregar un jugador con el
                       mismo nombre de jugador y representante, ponganse en contacto con el 
@@ -357,13 +398,13 @@ with st.form('Agregar Jugador'):
                     'representante_uid': representante_uid
                     }
                 add_jugador(jugador_data)
+                df_jugadores = get_all_jugadores()
                 jugador_uid = df_jugadores[df_jugadores['nombre'] == nombre]['jugador_uid'].values[0]
-                pertenece_data = {
+                club_jugador_data = {
                     'jugador_uid': jugador_uid,
-                    'club_uid': club_uid,
-                    'entrenador_uid': entrenador_uid
-                }
-                add_pertenece(pertenece_data)                
+                    'club_uid': club_uid        
+                    }
+                add_club_jugador(club_jugador_data)                
         elif not warning: 
             jugador_data = {
             'nombre': nombre,
@@ -390,13 +431,13 @@ with st.form('Agregar Jugador'):
             'representante_uid': representante_uid
             }                       
             add_jugador(jugador_data)
+            df_jugadores = get_all_jugadores()
             jugador_uid = df_jugadores[df_jugadores['nombre'] == nombre]['jugador_uid'].values[0]
-            pertenece_data = {
+            club_jugador_data = {
                     'jugador_uid': jugador_uid,
-                    'club_uid': club_uid,
-                    'entrenador_uid': entrenador_uid
-                }
-            add_pertenece(pertenece_data) 
+                    'club_uid': club_uid,    
+                    }
+            add_club_jugador(club_jugador_data)     
 
 ################### Form agregar Club ####################
 st.subheader('Agregar Club')
@@ -423,7 +464,7 @@ st.subheader('Agregar Entrenador')
 
 with st.form('Agregar Entrenador'):
     nombre_entrenador = st.text_input('Nombre')
-    club_nombre = st.selectbox('Club',[''] ,df_clubs['nombre'].tolist())
+    club_nombre = st.selectbox('Club',[''] + df_clubs['nombre'].tolist())
     if club_nombre == '':
         club_uid = None
     else:
@@ -449,12 +490,15 @@ with st.form('Agregar Entrenador'):
     if submit_entrenador_button:
         if entrenador_exists(nombre_entrenador):
             st.error('El entrenador con el mismo nombre ya existe')
+        ## if club_ui already exists in the table club_entrenador
+        elif club_entrenador_exists(club_uid):
+            st.error('El club ya tiene un entrenador asignado')
         else:
             entrenador_data = {
                 'nombre': nombre_entrenador,
                 'nacionalidad': nacionalidad_entrenador if nacionalidad_entrenador != '' else None,
                 'fecha_nacimiento': fecha_nacimiento_entrenador,
-                'esquema_predilecto': esquema_predilecto,
+                'esquema_predilecto': esquema_predilecto if esquema_predilecto != '' else None, 
                 'foto_entrenador': foto_entrenador,
                 'foto_carrera_entrenador': foto_carrera_entrenador,
                 'foto_carrera_como_jugador': foto_carrera_como_jugador,
@@ -467,13 +511,13 @@ with st.form('Agregar Entrenador'):
                 'foto_ultimos_partidos2': foto_ultimos_partidos2
             }
             add_entrenador(entrenador_data)
+            df_entrenadores = get_all_entrenadores()
             entrenador_uid = df_entrenadores[df_entrenadores['nombre'] == nombre_entrenador]['entrenador_uid'].values[0]
-            pertenece_data = {
+            club_entrenador_data = {
                 'entrenador_uid': entrenador_uid,
                 'club_uid': club_uid,
-                'jugador_uid': None
             }
-            add_pertenece(pertenece_data)
+            add_club_entrenador(club_entrenador_data)
     
 ################### Form agregar Representante ####################
 st.subheader('Agregar Representante')
@@ -526,12 +570,12 @@ with st.form('Agregar Video'):
                 'descripcion': video_descripcion
             }
             add_video(video_data)
+            df_videos = get_all_videos()
             video_uid = df_videos[df_videos['url'] == video_url]['video_uid'].values[0]
             tiene_video_data = {
-                
                 #make a select to get the player_uid or coach_uid and the video_uid
                 'jugador_uid': jugador_uid,
                 'entrenador_uid': entrenador_uid,
                 'video_uid': video_uid
             }
-            add_video(video_data)
+            add_tiene_video(tiene_video_data)
